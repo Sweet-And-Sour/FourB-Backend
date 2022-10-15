@@ -1,0 +1,10 @@
+FROM node:16
+
+ARG BACKEND_WORKDIR
+
+WORKDIR ${BACKEND_WORKDIR}
+
+COPY . .
+
+RUN yarn
+CMD ["yarn", "start:dev"]

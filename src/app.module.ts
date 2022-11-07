@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserController } from './user/user.controller';
-import { SignController } from './sign/sign.controller';
-import { ContentController } from './content/content.controller';
-import { FileController } from './file/file.controller';
-import { TeamController } from './team/team.controller';
-import { SearchController } from './search/search.controller';
+import { UserController } from 'src/controllers/user/user.controller';
+import { SignController } from 'src/controllers/sign/sign.controller';
+import { ContentController } from 'src/controllers/content/content.controller';
+import { FileController } from 'src/controllers/file/file.controller';
+import { TeamController } from 'src/controllers/team/team.controller';
+import { SearchController } from 'src/controllers/search/search.controller';
+import { DatabaseModule } from 'src/modules/database/database.module';
 
 @Module({
-  imports: [],
+  imports: [DatabaseModule],
   controllers: [
     AppController,
     UserController,

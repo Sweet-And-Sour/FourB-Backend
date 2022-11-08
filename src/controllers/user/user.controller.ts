@@ -29,7 +29,7 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '유저 정보 수정(인증 필요)' })
-  @Patch() // TODO: PATCH로 변경
+  @Patch()
   updateUser(): string {
     return '유저 정보 수정(인증 필요)';
   }

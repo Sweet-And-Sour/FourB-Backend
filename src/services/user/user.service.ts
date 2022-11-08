@@ -10,11 +10,11 @@ export class UserService {
     this.connectionService.pool.getConnection((error, connection) => {
       if (error) throw error;
 
-      const query = `INSERT INTO Users (username, password, email) values (${data.username}, ${data.password}, ${data.email})`;
+      const query = `INSERT INTO Users (username, password, email) VALUES ("${data.username}", "${data.password}", "${data.email}")`;
       connection.query(query, (error, results, fields) => {
-        connection.release();
-
         if (error) throw error;
+
+        connection.release();
       });
     });
   }

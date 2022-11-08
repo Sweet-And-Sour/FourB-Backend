@@ -19,12 +19,17 @@ export class UserController {
   })
   @Post()
   async createUser(@Body() data) {
-    const result = await this.userService.create(data);
+    let success = true;
+
+    try {
+      await this.userService.create(data);
+    } catch {
+      success = false;
+    }
 
     return Object.assign({
       message: '회원 가입',
-      // data: data,
-      result: '',
+      success: success,
     });
   }
 

@@ -14,6 +14,7 @@ export class UserController {
         email: { type: 'string' },
         username: { type: 'string' },
         password: { type: 'string' },
+        // TODO: 회원가입에 필요한 항목 추가
       },
     },
   })

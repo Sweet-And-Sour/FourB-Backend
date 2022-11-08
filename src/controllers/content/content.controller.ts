@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 
 @Controller('content')
 export class ContentController {
@@ -12,7 +12,7 @@ export class ContentController {
     return `컨텐츠 요청 (id: ${id})`;
   }
 
-  @Put('/:id')
+  @Patch('/:id')
   updateContent(@Param('id') id: number): string {
     return `컨텐츠 내용 수정 (id: ${id})`;
   }

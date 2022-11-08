@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Patch, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation } from '@nestjs/swagger';
 import { UserService } from 'src/services/user/user.service';
 
@@ -29,7 +29,7 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '유저 정보 수정(인증 필요)' })
-  @Put() // TODO: PATCH로 변경
+  @Patch() // TODO: PATCH로 변경
   updateUser(): string {
     return '유저 정보 수정(인증 필요)';
   }

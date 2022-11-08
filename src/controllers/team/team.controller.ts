@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 
 @Controller('team')
 export class TeamController {
@@ -12,7 +12,7 @@ export class TeamController {
     return `팀 정보 요청 (id: ${id})`;
   }
 
-  @Put('/:id')
+  @Patch('/:id')
   updateTeam(@Param('id') id: number): string {
     return `팀 정보 수정 (id: ${id})`;
   }

@@ -23,11 +23,17 @@ export class UserService {
   }
 
   async create(data: UserData) {
-    const query = `INSERT INTO Users (username, password, email) VALUES ("${data.username}", "${data.password}", "${data.email}")`;
+    try {
+      this.connectionService.pool.execute(
+        'INSERT INTO Users (username, password, email) VALUES (?, ?, ?)',
+        [data.username, data.password, data.email],
+      );
+    } catch (e) {
+      this.logger.error(e);
+      return false;
+    }
 
-    this.connectionService.pool.query(query, (error) => {
-      if (error) throw error;
-    });
+    return true;
   }
 
   async update(data: UserData) {

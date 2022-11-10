@@ -20,13 +20,7 @@ export class UserController {
   })
   @Post()
   async createUser(@Body() data) {
-    let success = true;
-
-    try {
-      await this.userService.create(data);
-    } catch {
-      success = false;
-    }
+    const success = await this.userService.create(data);
 
     return Object.assign({
       message: '회원 가입',
@@ -47,11 +41,9 @@ export class UserController {
   })
   @Patch()
   async updateUser(@Body() data) {
-    let success = true;
-
     // TODO: 인증 기능 추가
 
-    success = await this.userService.update(data);
+    const success = await this.userService.update(data);
 
     return Object.assign({
       message: '회원 정보 수정',

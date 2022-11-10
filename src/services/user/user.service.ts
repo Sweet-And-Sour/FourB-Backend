@@ -53,4 +53,23 @@ export class UserService {
 
     return true;
   }
+
+  async delete(username: string) {
+    if (!(await this.userExist(username))) {
+      this.logger.warn('UserService.delete: the username is not exists');
+      return false;
+    }
+
+    try {
+      this.connectionService.pool.execute(
+        'DELETE FROM Users WHERE username=?',
+        [username],
+      );
+    } catch (e) {
+      this.logger.error(e);
+      return false;
+    }
+
+    return true;
+  }
 }

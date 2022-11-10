@@ -52,8 +52,23 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '회원 탈퇴 및 회원 정보 삭제(인증 필요)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string' },
+      },
+    },
+  })
   @Delete()
-  deleteUser(): string {
-    return '회원 탈퇴 및 회원 정보 삭제(인증 필요)';
+  async deleteUser(@Body() data) {
+    // TODO: 인증 기능 추가
+
+    const success = await this.userService.delete(data.username);
+
+    return Object.assign({
+      message: '회원 탈퇴',
+      success: success,
+    });
   }
 }

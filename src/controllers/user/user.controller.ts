@@ -35,9 +35,28 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '유저 정보 수정(인증 필요)' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        email: { type: 'string' },
+        username: { type: 'string' },
+        password: { type: 'string' },
+      },
+    },
+  })
   @Patch()
-  updateUser(): string {
-    return '유저 정보 수정(인증 필요)';
+  async updateUser(@Body() data) {
+    let success = true;
+
+    // TODO: 인증 기능 추가
+
+    success = await this.userService.update(data);
+
+    return Object.assign({
+      message: '회원 정보 수정',
+      success: success,
+    });
   }
 
   @ApiOperation({ summary: '회원 탈퇴 및 회원 정보 삭제(인증 필요)' })

@@ -1,5 +1,7 @@
 import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('File')
 @Controller('file')
 export class FileController {
   @Post()

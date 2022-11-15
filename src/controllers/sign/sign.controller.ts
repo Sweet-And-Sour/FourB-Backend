@@ -20,7 +20,6 @@ export class SignController {
   @Get('payload')
   @UseGuards(JwtAuthGuard)
   getPayload(@Request() req) {
-    console.log(req.user);
     return req.user;
   }
 }

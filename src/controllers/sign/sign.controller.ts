@@ -9,12 +9,6 @@ import { LocalAuthGuard } from 'src/services/auth/local-auth.guard';
 export class SignController {
   constructor(private authService: AuthService) {}
 
-  @ApiOperation({ summary: '로그아웃(인증 필요)' })
-  @Get()
-  signOut() {
-    return '로그아웃(인증 필요)';
-  }
-
   @ApiOperation({ summary: '로그인' })
   @Post()
   @UseGuards(LocalAuthGuard)

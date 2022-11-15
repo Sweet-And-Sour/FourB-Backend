@@ -11,10 +11,14 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, password: string) {
-    const user = (await this.userService.getUser(username))[0];
+    const results = await this.userService.getUser(username);
 
-    if (user != undefined && user.password == password) {
-      return user;
+    if (results && results.length != 0) {
+      const user = results[0];
+
+      if (user != undefined && user.password == password) {
+        return user;
+      }
     }
 
     return undefined;

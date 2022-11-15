@@ -9,6 +9,7 @@ import { TeamController } from 'src/controllers/team/team.controller';
 import { SearchController } from 'src/controllers/search/search.controller';
 import { CategoryController } from 'src/controllers/category/category.controller';
 import { DatabaseModule } from 'src/modules/database/database.module';
+import { CategoryService } from './services/category/category.service';
 
 @Module({
   imports: [DatabaseModule],
@@ -22,6 +23,6 @@ import { DatabaseModule } from 'src/modules/database/database.module';
     SearchController,
     CategoryController,
   ],
-  providers: [AppService],
+  providers: [AppService, CategoryService],
 })
 export class AppModule {}

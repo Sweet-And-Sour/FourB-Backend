@@ -5,7 +5,7 @@ import { AuthService } from 'src/services/auth/auth.service';
 import { jwtConstants } from 'src/services/auth/constants';
 import { JwtStrategy } from 'src/services/auth/jwt.strategy';
 import { LocalStrategy } from 'src/services/auth/local.strategy';
-import { DatabaseModule } from './database.module';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
   imports: [

@@ -10,7 +10,7 @@ import { SearchController } from 'src/controllers/search/search.controller';
 import { DatabaseModule } from 'src/modules/database/database.module';
 import { AuthService } from './services/auth/auth.service';
 import { LocalStrategy } from './services/auth/local.strategy';
-import { AuthModule } from './modules/database/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [DatabaseModule, AuthModule],

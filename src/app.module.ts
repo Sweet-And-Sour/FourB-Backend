@@ -7,6 +7,7 @@ import { ContentController } from 'src/controllers/content/content.controller';
 import { FileController } from 'src/controllers/file/file.controller';
 import { TeamController } from 'src/controllers/team/team.controller';
 import { SearchController } from 'src/controllers/search/search.controller';
+import { CategoryController } from 'src/controllers/category/category.controller';
 import { DatabaseModule } from 'src/modules/database/database.module';
 
 @Module({
@@ -19,6 +20,7 @@ import { DatabaseModule } from 'src/modules/database/database.module';
     FileController,
     TeamController,
     SearchController,
+    CategoryController,
   ],
   providers: [AppService],
 })

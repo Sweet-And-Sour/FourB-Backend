@@ -7,7 +7,7 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
   constructor(private connectionService: ConnectionService) {}
 
-  async getUser(username: string): Promise<UserData> {
+  async getUser(username: string): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
         'SELECT * FROM Users WHERE username=?',

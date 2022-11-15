@@ -23,9 +23,4 @@ export class SignController {
     console.log(req.user);
     return req.user;
   }
-
-  @Post('/google')
-  signInWithGoogleAccount() {
-    return '구글 계정을 통한 로그인 (추가 개발)';
-  }
 }

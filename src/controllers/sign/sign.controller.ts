@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from 'src/services/auth/auth.service';
 import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
 import { LocalAuthGuard } from 'src/services/auth/local-auth.guard';
@@ -10,6 +10,15 @@ export class SignController {
   constructor(private authService: AuthService) {}
 
   @ApiOperation({ summary: '로그인' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string' },
+        password: { type: 'string' },
+      },
+    },
+  })
   @Post()
   @UseGuards(LocalAuthGuard)
   signIn(@Request() req) {
@@ -17,6 +26,7 @@ export class SignController {
   }
 
   @ApiOperation({ summary: 'JWT Payload 확인 (인증 필요)' })
+  @ApiBearerAuth('access-token')
   @Get('payload')
   @UseGuards(JwtAuthGuard)
   getPayload(@Request() req) {

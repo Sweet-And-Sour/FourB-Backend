@@ -19,16 +19,16 @@ export class SignController {
       },
     },
   })
-  @Post()
   @UseGuards(LocalAuthGuard)
+  @Post()
   signIn(@Request() req) {
     return this.authService.getToken(req.user);
   }
 
   @ApiOperation({ summary: 'JWT Payload 확인 (인증 필요)' })
   @ApiBearerAuth('access-token')
-  @Get('payload')
   @UseGuards(JwtAuthGuard)
+  @Get('payload')
   getPayload(@Request() req) {
     return req.user;
   }

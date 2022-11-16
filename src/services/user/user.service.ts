@@ -7,19 +7,23 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
   constructor(private connectionService: ConnectionService) {}
 
-  async userExist(username: string): Promise<boolean> {
+  async getUser(username: string): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT username FROM Users WHERE username=?',
+        'SELECT * FROM Users WHERE username=?',
         [username],
       );
 
-      return (rows as any).length === 1;
+      if ((rows as any).length === 1) {
+        return rows as any;
+      } else {
+        return undefined;
+      }
     } catch (e) {
       this.logger.error(e);
     }
 
-    return false;
+    return undefined;
   }
 
   async create(data: UserData) {
@@ -37,7 +41,7 @@ export class UserService {
   }
 
   async update(data: UserData) {
-    if (!(await this.userExist(data.username))) {
+    if (await this.getUser(data.username) !== undefined) {
       this.logger.warn('UserService.update: the username is not exists');
       return false;
     }
@@ -55,7 +59,7 @@ export class UserService {
   }
 
   async delete(username: string) {
-    if (!(await this.userExist(username))) {
+    if (await this.getUser(username) !== undefined) {
       this.logger.warn('UserService.delete: the username is not exists');
       return false;
     }

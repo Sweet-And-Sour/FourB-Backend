@@ -11,10 +11,10 @@ export class CategoryService {
   async categoryExist(categoryname: string): Promise<boolean> {
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT categoryname FROM Categories WHERE categoryname=?',
+        'SELECT name FROM Categories WHERE name=?',
         [categoryname],
       );
-  return (rows as any).length === 1;
+  return (rows as any).length > 0;
     } catch (e) {
       this.logger.error(e);
     }
@@ -22,30 +22,26 @@ export class CategoryService {
     return false;
   }
 
-    async get(categoryname :string): Promise<boolean> {
+    async getAll(): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT categoryname FROM Cartegories WHERE categoryname=?',
-        [categoryname],
+        'SELECT name FROM Categories',
+        [],
       );
 
-      return (rows as any).length === 1;
+      return rows;
 
-      if ((rows as any).length === 1) {
-        return rows as any;
-      } else {
-        return undefined;
-      }
     } catch (e) {
-      this.logger.error(e);
-      return false;
+        console.error(e);
+        this.logger.error(e);
+        return undefined;
     }
   }
 
     async create(data: CategoryData) {
     try {
       this.connectionService.pool.execute(
-        'INSERT INTO Categoies (categoryname) VALUES (?)',
+        'INSERT INTO Categories (name) VALUES (?)',
         [data.name],
       );
     } catch (e) {
@@ -82,10 +78,11 @@ export class CategoryService {
 
     try {
       this.connectionService.pool.execute(
-        'DELETE FROM Categories WHERE categoryname=?',
+        'DELETE FROM Categories WHERE name=?',
         [categoryname],
       );
     } catch (e) {
+        console.error(e);
       this.logger.error(e);
       return false;
     }

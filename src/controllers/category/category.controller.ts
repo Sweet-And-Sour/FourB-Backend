@@ -53,14 +53,15 @@ export class CategoryController {
     schema: {
       type: 'object',
       properties: {
-        name: { type: 'string' },
+        newname: { type: 'string' },
+        oldname: { type: 'string' },
       },
     },
   })
   @Patch()
   async updateCategory(@Body() data) {
     // TODO: 관리자용 (인증필요)
-    const success = await this.categoryService.update(data);
+    const success = await this.categoryService.update(data.oldname, data.newname);
 
     return Object.assign({
       message: '카테고리 수정',

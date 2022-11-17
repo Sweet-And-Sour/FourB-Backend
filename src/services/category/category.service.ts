@@ -52,16 +52,16 @@ export class CategoryService {
     return true;
   }
 
-   async update(data: CategoryData) {
-    if (!(await this.categoryExist(data.name))) {
+   async update(oldname: string, newname: string) {
+    if (!(await this.categoryExist(oldname))) {
       this.logger.warn('CategoryService.update: the categoryname is not exists');
       return false;
     }
 
    try {
       this.connectionService.pool.execute(
-        'UPDATE Categories SET email=?, password=? WHERE Categoryname=?',
-        [data.name],
+        'UPDATE Categories SET name=? WHERE name=?',
+        [newname, oldname],
       );
        } catch (e) {
       return false;

@@ -12,7 +12,9 @@ export class TagService {
         'SELECT name FROM Tags WHERE name=?',
         [tagname],
       );
-  return (rows as any).length > 0;
+      
+      return (rows as any).length > 0;
+
     } catch (e) {
       this.logger.error(e);
     }
@@ -37,26 +39,33 @@ export class TagService {
   }
 
     async create(name: string) {
-    try {
-      this.connectionService.pool.execute(
-        'INSERT INTO Tags (name) VALUES (?)',
-        [name],
-      );
-    } catch (e) {
-      this.logger.error(e);
-      return false;
-    }
+      if (await this.tagExist(name)) {
+        this.logger.warn(`TagService.create: the tagname is not exists (name: ${name})`);
+        return false;
+      }
 
-    return true;
-  }
+      try {
+        this.connectionService.pool.execute(
+          'INSERT INTO Tags (name) VALUES (?)',
+          [name],
+        );
+      } catch (e) {
+        this.logger.error(e);
+        return false;
+      }
+
+      return true;
+    }
 
    async update(oldname: string, newname: string) {
     if (!(await this.tagExist(oldname))) {
-      this.logger.warn('TagService.update: the tagname is not exists');
+      this.logger.warn(`TagService.update: the tagname is not exists (newname: ${newname}, oldname: ${
+      oldname})`);
       return false;
     }
 
-   try {
+   try { 
+      console.log(newname, oldname);
       this.connectionService.pool.execute(
         'UPDATE Tags SET name=? WHERE name=?',
         [newname, oldname],

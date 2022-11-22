@@ -1,12 +1,32 @@
-import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Patch, Post, Param, Get } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { TeamService } from 'src/services/team/team.service';
 
 @ApiTags('Team')
 @Controller('team')
 export class TeamController {
+  constructor(private teamService: TeamService) {}
+
+  @ApiOperation({ summary: '팀 생성' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        contents: { type: 'string' },
+        introduction: { type: 'string' },
+      },
+    },
+  })
   @Post()
-  createTeam(): string {
-    return '팀 생성';
+  async createTeam(@Body() data) {
+    console.log(data);
+
+    const success = await this.teamService.create(data);
+
+    return Object.assign({
+      message: '팀 생성',
+      success: success,
+    });
   }
 
   @Get('/:id')

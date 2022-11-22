@@ -38,7 +38,7 @@ export class TagController {
   })
   @Post()
   async createTag(@Body() data) {
-    const success = await this.tagService.create(data);
+    const success = await this.tagService.create(data.name);
 
 
     return Object.assign({

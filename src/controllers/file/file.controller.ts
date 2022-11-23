@@ -33,8 +33,6 @@ export class FileController {
   async getFile(@Response() response: Res, @Param('filename') filename: string) {
     const result = await this.fileService.streamFile(filename);
 
-    console.log(result);
-    
     if (result.success) {
       response.setHeader('Content-Type', result.mime);
       response.setHeader('Content-Disposition', `attachment; filename=${result.originalname}`);

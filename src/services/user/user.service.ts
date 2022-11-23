@@ -14,6 +14,8 @@ export class UserService {
         [username],
       );
 
+      console.log(rows);
+
       return (rows as any).length === 1;
     } catch (e) {
       this.logger.error(e);

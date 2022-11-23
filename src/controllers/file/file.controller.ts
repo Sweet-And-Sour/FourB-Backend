@@ -1,21 +1,39 @@
-import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileService } from 'src/services/file/file.service';
 
 @ApiTags('File')
 @Controller('file')
 export class FileController {
+  constructor(private fileService: FileService) {}
+
+  @ApiOperation({ summary: '새로운 파일 추가 (인증 필요)' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
   @Post()
-  createFile(): string {
-    return '새로운 파일 추가';
+  async createFile(@UploadedFile('file') file: Express.Multer.File) {
+    return this.fileService.createFile(file);
   }
 
-  @Get('/:hashId')
-  readFile(@Param('hashId') hashId: number): string {
-    return `파일 요청 (hashId: ${hashId})`;
+  @Get('/:filename')
+  readFile(@Param('filename') filename: string) {
+    return '파일 요청';
   }
 
-  @Delete('/:hashId')
-  deleteFile(@Param('hashId') hashId: number): string {
-    return `파일 삭제 (hashId: ${hashId})`;
+  @Delete('/:filename')
+  deleteFile(@Param('filename') filename: string) {
+    return this.fileService.deleteFile(filename);
   }
 }

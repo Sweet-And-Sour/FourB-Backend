@@ -48,6 +48,7 @@ export class FileService {
   }
 
   async createFile(file: Express.Multer.File) {
+    const originalname = Buffer.from(file.originalname, 'latin1').toString('utf-8');
     const hash = this.getHash(file.buffer);
 
     if (await this.isHashExist(hash)) {
@@ -80,7 +81,7 @@ export class FileService {
 
       await this.connectionService.pool.execute(
         'INSERT INTO Files (hash_id, originalname, filename, mime) VALUES (?, ?, ?, ?)',
-        [hash, file.originalname, filename, file.mimetype],
+        [hash, originalname, filename, file.mimetype],
       );
 
       this.logger.log(`FileService.createFile: 새로운 파일 추가 (filename: ${filename})`);

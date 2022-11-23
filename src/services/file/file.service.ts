@@ -1,4 +1,4 @@
-import { Injectable, Logger, StreamableFile } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { writeFileSync, accessSync, unlinkSync, constants, createReadStream } from 'fs';
 import { join } from 'path';
 import { ConnectionService } from '../connection/connection.service';
@@ -73,6 +73,8 @@ export class FileService {
         'INSERT INTO Files (hash_id, originalname, filename, mime) VALUES (?, ?, ?, ?)',
         [hash, file.originalname, filename, file.mimetype],
       );
+
+      this.logger.log(`FileService.createFile: 새로운 파일 추가 (filename: ${filename})`);
 
       return {
         message: '파일 업로드 (새로운 파일 추가)',
@@ -154,6 +156,8 @@ export class FileService {
         [filename],
       );
   
+      this.logger.log(`FileService.deleteFile: 파일 삭제 (filename: ${filename})`);
+
       return {
         message: '파일 삭제 완료',
         success: true,

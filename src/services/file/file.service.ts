@@ -57,6 +57,15 @@ export class FileService {
       }
     }
 
+    const uploadLimit = parseInt(process.env['BACKEND_UPLOAD_LIMIT']);
+    if (file.size == uploadLimit) {
+      return {
+        message: `최대 파일 용량을 초과했습니다. (제한 용량: ${uploadLimit})`,
+        success: false,
+        size: file.size,
+      }
+    }
+
     try {
       const now = new Date;
       const utcTimestamp = Date.UTC(

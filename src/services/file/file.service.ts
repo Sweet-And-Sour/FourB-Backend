@@ -1,5 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { writeFileSync, accessSync, unlinkSync, constants } from 'fs';
+import { Injectable, Logger, StreamableFile } from '@nestjs/common';
+import { writeFileSync, accessSync, unlinkSync, constants, createReadStream } from 'fs';
 import { join } from 'path';
 import { ConnectionService } from '../connection/connection.service';
 import * as crypto from 'crypto';
@@ -77,6 +77,7 @@ export class FileService {
       return {
         message: '파일 업로드 (새로운 파일 추가)',
         success: true,
+        filename: filename,
         url: `/api/static/${filename}`,
       }
 
@@ -85,6 +86,44 @@ export class FileService {
       this.logger.error(e);
 
       // TODO: rollback
+
+      return {
+        message: '오류가 발생했습니다.',
+        error: e.code,
+        success: false,
+      }
+    }
+  }
+
+  async streamFile(filename: string) {
+    const file = await this.getFile(filename) as any;
+
+    if (file.length == 0) {
+      return {
+        message: '파일이 존재하지 않습니다.',
+        success: false,
+        filename: filename,
+      }
+    }
+
+    try {
+      const filepath = join(process.env['BACKEND_STATIC_FILES'], filename);
+      await accessSync(filepath, constants.F_OK);
+      const stream = createReadStream(filepath);
+      const fileInfo = file[0];
+
+      return {
+        message: '파일 스트리밍',
+        success: true,
+        hash: fileInfo.hash_id,
+        originalname: fileInfo.originalname,
+        mime: fileInfo.mime,
+        stream: stream,
+      };
+
+    } catch (e) {
+      console.error(e);
+      this.logger.error(e);
 
       return {
         message: '오류가 발생했습니다.',

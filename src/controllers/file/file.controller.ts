@@ -34,8 +34,10 @@ export class FileController {
     const result = await this.fileService.streamFile(filename);
 
     if (result.success) {
+      const originalname = encodeURIComponent(result.originalname);
+
       response.setHeader('Content-Type', result.mime);
-      response.setHeader('Content-Disposition', `attachment; filename=${result.originalname}`);
+      response.setHeader('Content-Disposition', `attachment; filename=${originalname}`);
       result.stream.pipe(response);
 
       return response;

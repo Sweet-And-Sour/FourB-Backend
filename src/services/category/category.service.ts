@@ -38,11 +38,16 @@ export class CategoryService {
     }
   }
 
-    async create(data: CategoryData) {
+     async create(categoryname: string) {
+      if (await this.categoryExist(categoryname)) {
+        this.logger.warn(`CategoryService.create: the categoryname is not exists (name: ${categoryname})`);
+        return false;
+      }
+
     try {
       this.connectionService.pool.execute(
         'INSERT INTO Categories (name) VALUES (?)',
-        [data.name],
+        [categoryname],
       );
     } catch (e) {
       this.logger.error(e);
@@ -54,11 +59,13 @@ export class CategoryService {
 
    async update(oldname: string, newname: string) {
     if (!(await this.categoryExist(oldname))) {
-      this.logger.warn('CategoryService.update: the categoryname is not exists');
+       this.logger.warn(`CategoryService.update: the categoryname is not exists (newname: ${newname}, oldname: ${
+      oldname})`);
       return false;
     }
 
    try {
+      console.log(newname, oldname);
       this.connectionService.pool.execute(
         'UPDATE Categories SET name=? WHERE name=?',
         [newname, oldname],

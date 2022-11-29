@@ -1,21 +1,55 @@
-import { Controller, Get, Post, Param, Delete } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Param, Delete, UseInterceptors, UploadedFile, Response } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FileService } from 'src/services/file/file.service';
+import { Response as Res } from 'express';
 
 @ApiTags('File')
 @Controller('file')
 export class FileController {
+  constructor(private fileService: FileService) {}
+
+  @ApiOperation({ summary: '새로운 파일 추가 (인증 필요)' })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file'))
   @Post()
-  createFile(): string {
-    return '새로운 파일 추가';
+  async createFile(@UploadedFile('file') file: Express.Multer.File) {
+    return this.fileService.createFile(file);
   }
 
-  @Get('/:hashId')
-  readFile(@Param('hashId') hashId: number): string {
-    return `파일 요청 (hashId: ${hashId})`;
+  @ApiOperation({ summary: '파일 다운로드' })
+  @Get('/:filename')
+  async getFile(@Response() response: Res, @Param('filename') filename: string) {
+    const result = await this.fileService.streamFile(filename);
+
+    if (result.success) {
+      const originalname = encodeURIComponent(result.originalname);
+
+      response.setHeader('Content-Type', result.mime);
+      response.setHeader('Content-Disposition', `attachment; filename=${originalname}`);
+      result.stream.pipe(response);
+
+      return response;
+
+    } else {
+      return response.json(result);
+    }
   }
 
-  @Delete('/:hashId')
-  deleteFile(@Param('hashId') hashId: number): string {
-    return `파일 삭제 (hashId: ${hashId})`;
+  @ApiOperation({ summary: '파일 삭제 (인증 필요)' })
+  @Delete('/:filename')
+  async deleteFile(@Param('filename') filename: string) {
+    return await this.fileService.deleteFile(filename);
   }
 }

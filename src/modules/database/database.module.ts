@@ -5,6 +5,6 @@ import { ConnectionService } from 'src/services/connection/connection.service';
 
 @Module({
   providers: [UserService, TeamService, ConnectionService],
-  exports: [UserService, TeamService],
+  exports: [UserService, TeamService, ConnectionService],
 })
 export class DatabaseModule {}

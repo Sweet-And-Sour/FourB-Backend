@@ -41,16 +41,17 @@ export class UserService {
   }
 
   async update(data: UserData) {
-    if (await this.getUser(data.username) !== undefined) {
+    if ((await this.getUser(data.username)) === undefined) {
       this.logger.warn('UserService.update: the username is not exists');
       return false;
     }
 
     try {
-      this.connectionService.pool.execute(
-        'UPDATE Users SET email=?, password=? WHERE username=?',
-        [data.email, data.password, data.username],
-      );
+      this.connectionService.pool.execute('UPDATE Users SET email=?, password=? WHERE username=?', [
+        data.email,
+        data.password,
+        data.username,
+      ]);
     } catch (e) {
       return false;
     }
@@ -59,16 +60,13 @@ export class UserService {
   }
 
   async delete(username: string) {
-    if (await this.getUser(username) !== undefined) {
+    if ((await this.getUser(username)) === undefined) {
       this.logger.warn('UserService.delete: the username is not exists');
       return false;
     }
 
     try {
-      this.connectionService.pool.execute(
-        'DELETE FROM Users WHERE username=?',
-        [username],
-      );
+      this.connectionService.pool.execute('DELETE FROM Users WHERE username=?', [username]);
     } catch (e) {
       this.logger.error(e);
       return false;

@@ -1,5 +1,6 @@
-import { Body, Controller, Delete, Patch, Post } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
 import { UserService } from 'src/services/user/user.service';
 
 @ApiTags('User')
@@ -40,10 +41,10 @@ export class UserController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
   @Patch()
   async updateUser(@Body() data) {
-    // TODO: 인증 기능 추가
-
     const success = await this.userService.update(data);
 
     return Object.assign({
@@ -61,10 +62,10 @@ export class UserController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
   @Delete()
   async deleteUser(@Body() data) {
-    // TODO: 인증 기능 추가
-
     const success = await this.userService.delete(data.username);
 
     return Object.assign({

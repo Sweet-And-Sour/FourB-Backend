@@ -62,8 +62,15 @@ export class TeamController {
     });
   }
 
+  @ApiOperation({ summary: '팀 및 팀 데이터 삭제' })
+  @ApiParam({ name: 'id' })
   @Delete('/:id')
-  deleteTeam(@Param('id') id: number): string {
-    return `팀 및 팀 데이터 삭제 (id: ${id})`;
+  async deleteTeam(@Param('id') id: number) {
+    const success = await this.teamService.delete(id);
+
+    return Object.assign({
+      message: '팀 및 팀 데이터 삭제',
+      success: success,
+    });
   }
 }

@@ -56,22 +56,19 @@ export class TeamService {
     return true;
   }
 
-  // async delete(username: string) {
-  //   if ((await this.getUser(username)) !== undefined) {
-  //     this.logger.warn('UserService.delete: the username is not exists');
-  //     return false;
-  //   }
+  async delete(id: number) {
+    if ((await this.read(id)) === undefined) {
+      this.logger.warn('TeamService.delete: the id is not exists');
+      return false;
+    }
 
-  //   try {
-  //     this.connectionService.pool.execute(
-  //       'DELETE FROM Users WHERE username=?',
-  //       [username],
-  //     );
-  //   } catch (e) {
-  //     this.logger.error(e);
-  //     return false;
-  //   }
+    try {
+      this.connectionService.pool.execute('DELETE FROM Teams WHERE id=?', [id]);
+    } catch (e) {
+      this.logger.error(e);
+      return false;
+    }
 
-  //   return true;
-  // }
+    return true;
+  }
 }

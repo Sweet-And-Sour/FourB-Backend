@@ -7,24 +7,21 @@ export class TeamService {
   private readonly logger = new Logger(TeamService.name);
   constructor(private connectionService: ConnectionService) {}
 
-  // async getUser(username: string): Promise<any> {
-  //   try {
-  //     const [rows] = await this.connectionService.pool.execute(
-  //       'SELECT * FROM Users WHERE username=?',
-  //       [username],
-  //     );
+  async read(id: number): Promise<any> {
+    try {
+      const [rows] = await this.connectionService.pool.execute('SELECT * FROM Teams WHERE id=?', [id]);
 
-  //     if ((rows as any).length === 1) {
-  //       return rows as any;
-  //     } else {
-  //       return undefined;
-  //     }
-  //   } catch (e) {
-  //     this.logger.error(e);
-  //   }
+      if ((rows as any).length === 1) {
+        return rows as any;
+      } else {
+        return undefined;
+      }
+    } catch (e) {
+      this.logger.error(e);
+    }
 
-  //   return undefined;
-  // }
+    return undefined;
+  }
 
   async create(data: TeamData) {
     try {

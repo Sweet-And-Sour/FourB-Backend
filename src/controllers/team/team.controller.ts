@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Patch, Post, Param, Get } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiParam, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TeamService } from 'src/services/team/team.service';
 
 @ApiTags('Team')
@@ -29,9 +29,17 @@ export class TeamController {
     });
   }
 
+  @ApiOperation({ summary: '팀 정보 요청' })
+  @ApiParam({ name: 'id' })
   @Get('/:id')
-  readTeam(@Param('id') id: number): string {
-    return `팀 정보 요청 (id: ${id})`;
+  async readTeam(@Param() params) {
+    const results = await this.teamService.read(params.id);
+
+    return Object.assign({
+      message: '팀 정보 요청',
+      success: results !== undefined,
+      results: results,
+    });
   }
 
   @Patch('/:id')

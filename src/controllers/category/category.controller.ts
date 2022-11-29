@@ -8,15 +8,6 @@ export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
   @ApiOperation({ summary: '카테고리 가져오기' })
-  // @ApiBody({
-  //   schema: {
-  //     type: 'object',
-  //     properties: {
-  //       categoryname: { type: 'string' },
-  //     },
-  //   },
-  // })
-
   @Get()
   async getAllCategory() {
       const results = await this.categoryService.getAll();

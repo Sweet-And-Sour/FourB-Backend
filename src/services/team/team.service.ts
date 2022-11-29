@@ -37,23 +37,24 @@ export class TeamService {
     return true;
   }
 
-  // async update(data: UserData) {
-  //   if ((await this.getUser(data.username)) !== undefined) {
-  //     this.logger.warn('UserService.update: the username is not exists');
-  //     return false;
-  //   }
+  async update(id: number, data: TeamData) {
+    if ((await this.read(id)) === undefined) {
+      this.logger.warn('TeamService.update: the id is not exists');
+      return false;
+    }
 
-  //   try {
-  //     this.connectionService.pool.execute(
-  //       'UPDATE Users SET email=?, password=? WHERE username=?',
-  //       [data.email, data.password, data.username],
-  //     );
-  //   } catch (e) {
-  //     return false;
-  //   }
+    try {
+      this.connectionService.pool.execute('UPDATE Teams SET contents=?, introduction=? WHERE id=?', [
+        data.contents,
+        data.introduction,
+        id,
+      ]);
+    } catch (e) {
+      return false;
+    }
 
-  //   return true;
-  // }
+    return true;
+  }
 
   // async delete(username: string) {
   //   if ((await this.getUser(username)) !== undefined) {

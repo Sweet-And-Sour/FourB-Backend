@@ -42,9 +42,24 @@ export class TeamController {
     });
   }
 
+  @ApiOperation({ summary: '팀 정보 수정' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        contents: { type: 'string' },
+        introduction: { type: 'string' },
+      },
+    },
+  })
   @Patch('/:id')
-  updateTeam(@Param('id') id: number): string {
-    return `팀 정보 수정 (id: ${id})`;
+  async updateTeam(@Param('id') id: number, @Body() data) {
+    const success = await this.teamService.update(id, data);
+
+    return Object.assign({
+      message: '팀 정보 수정',
+      success: success,
+    });
   }
 
   @Delete('/:id')

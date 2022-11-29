@@ -8,6 +8,7 @@ import { FileController } from 'src/controllers/file/file.controller';
 import { TeamController } from 'src/controllers/team/team.controller';
 import { SearchController } from 'src/controllers/search/search.controller';
 import { DatabaseModule } from 'src/modules/database/database.module';
+import { ContentsService } from './services/content/content.service';
 
 @Module({
   imports: [DatabaseModule],
@@ -20,6 +21,6 @@ import { DatabaseModule } from 'src/modules/database/database.module';
     TeamController,
     SearchController,
   ],
-  providers: [AppService],
+  providers: [AppService, ContentsService],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Body,Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ContentsService } from 'src/services/content/content.service';
 
@@ -6,7 +6,7 @@ import { ContentsService } from 'src/services/content/content.service';
 @Controller('content')
 export class ContentController {
   constructor(private ContentsService: ContentsService) {}
-  
+
   @ApiOperation({ summary: '컨텐츠 생성' })
   @ApiBody({
     schema: {
@@ -14,7 +14,7 @@ export class ContentController {
       properties: {
         user_id: { type: 'number' },
         title: { type: 'string' },
-        contents:{type:'string'},
+        contents: { type: 'string' },
         // TODO: 게시글 작성 항목 추가
       },
     },
@@ -28,9 +28,6 @@ export class ContentController {
       success: success,
     });
   }
-
-
-
 
   @ApiOperation({ summary: '컨텐츠 요청' })
   @ApiParam({
@@ -47,14 +44,12 @@ export class ContentController {
     };
   }
 
-
-  
   @ApiOperation({ summary: '컨텐츠 수정' })
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        id:{type:'number'},
+        id: { type: 'number' },
         contents: { type: 'string' },
       },
     },

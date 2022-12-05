@@ -7,7 +7,9 @@ import { ContentController } from 'src/controllers/content/content.controller';
 import { FileController } from 'src/controllers/file/file.controller';
 import { TeamController } from 'src/controllers/team/team.controller';
 import { SearchController } from 'src/controllers/search/search.controller';
+import { CategoryController } from 'src/controllers/category/category.controller';
 import { DatabaseModule } from 'src/modules/database/database.module';
+import { CategoryService } from './services/category/category.service';
 import { FileService } from './services/file/file.service';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthService } from './services/auth/auth.service';
@@ -34,8 +36,9 @@ import { TagService } from 'src/services/tag/tag.service';
     FileController,
     TeamController,
     SearchController,
+    CategoryController,
     TagController,
   ],
-  providers: [AppService, FileService, ContentService, TagService],
+  providers: [AppService, CategoryService, FileService, ContentService, TagService],
 })
 export class AppModule {}

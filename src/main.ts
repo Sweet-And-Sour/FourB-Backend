@@ -9,6 +9,10 @@ async function bootstrap() {
     .setTitle('The FourB backend')
     .setDescription('FourB API 설명 테스트')
     .setVersion('0.1')
+    .addBearerAuth(
+      { type: 'http', name: 'Authorization', scheme: 'Bearer', bearerFormat: 'Bearer', in: 'Header' },
+      'access-token',
+    )
     .build();
   app.setGlobalPrefix('api');
   const document = SwaggerModule.createDocument(app, config);

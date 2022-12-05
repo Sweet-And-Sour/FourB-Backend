@@ -10,9 +10,24 @@ import { SearchController } from 'src/controllers/search/search.controller';
 import { CategoryController } from 'src/controllers/category/category.controller';
 import { DatabaseModule } from 'src/modules/database/database.module';
 import { CategoryService } from './services/category/category.service';
+import { FileService } from './services/file/file.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { AuthService } from './services/auth/auth.service';
+import { LocalStrategy } from './services/auth/local.strategy';
+import { AuthModule } from './modules/auth/auth.module';
+import { ContentService } from './services/content/content.service';
+import { TagController } from 'src/controllers/tag/tag.controller';
+import { TagService } from 'src/services/tag/tag.service';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: process.env['BACKEND_STATIC_FILES'],
+      serveRoot: '/api/static',
+    }),
+    DatabaseModule,
+    AuthModule,
+  ],
   controllers: [
     AppController,
     UserController,
@@ -22,7 +37,8 @@ import { CategoryService } from './services/category/category.service';
     TeamController,
     SearchController,
     CategoryController,
+    TagController,
   ],
-  providers: [AppService, CategoryService],
+  providers: [AppService, CategoryService, FileService, ContentService, TagService],
 })
 export class AppModule {}

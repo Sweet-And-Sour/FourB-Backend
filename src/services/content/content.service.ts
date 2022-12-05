@@ -1,13 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConnectionService } from 'src/services/connection/connection.service';
-import { Contentsdata } from 'src/interfaces/Content-data.interface';
+import { Contentdata } from 'src/interfaces/content-data.interface';
 
 @Injectable()
-export class ContentsService {
-  private readonly logger = new Logger(ContentsService.name);
+export class ContentService {
+  private readonly logger = new Logger(ContentService.name);
   constructor(private connectionService: ConnectionService) {}
 
-  async create(data: Contentsdata) {
+  async create(data: Contentdata) {
     try {
       this.connectionService.pool.execute(
         'INSERT INTO Contents ( user_id, title,contents) VALUES (?,?,?)',
@@ -35,7 +35,7 @@ export class ContentsService {
     }
   }
 
-  async update(data: Contentsdata) {
+  async update(data: Contentdata) {
     try {
       this.connectionService.pool.execute('UPDATE Contents SET contents=? WHERE id=?', [
         data.contents,
@@ -49,7 +49,7 @@ export class ContentsService {
     return true;
   }
 
-  async delete(data: Contentsdata) {
+  async delete(data: Contentdata) {
     try {
       this.connectionService.pool.execute('DELETE FROM Contents WHERE id=?', [data.id]);
     } catch (e) {

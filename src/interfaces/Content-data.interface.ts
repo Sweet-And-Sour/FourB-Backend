@@ -1,4 +1,4 @@
-export interface Contentsdata {
+export interface Contentdata {
   id: number;
   user_id: number;
   team_id: number;

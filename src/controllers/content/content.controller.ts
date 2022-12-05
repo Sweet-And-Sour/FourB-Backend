@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { ContentsService } from 'src/services/content/content.service';
+import { ContentService } from 'src/services/content/content.service';
 
 @ApiTags('Content')
 @Controller('content')
 export class ContentController {
-  constructor(private ContentsService: ContentsService) {}
+  constructor(private ContentsService: ContentService) {}
 
   @ApiOperation({ summary: '컨텐츠 생성' })
   @ApiBody({

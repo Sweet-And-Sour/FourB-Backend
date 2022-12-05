@@ -31,9 +31,7 @@ export class ConnectionService {
      */
     this.pool.on('connection', (connection: Connection) => {
       // TODO: Logger로 대체
-      this.logger.log(
-        `New connection (${connection.threadId}) is mode within pool`,
-      );
+      this.logger.log(`New connection (${connection.threadId}) is mode within pool`);
     });
 
     /*

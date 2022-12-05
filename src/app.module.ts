@@ -13,15 +13,16 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { AuthService } from './services/auth/auth.service';
 import { LocalStrategy } from './services/auth/local.strategy';
 import { AuthModule } from './modules/auth/auth.module';
+import { ContentService } from './services/content/content.service';
 
 @Module({
   imports: [
     ServeStaticModule.forRoot({
-        rootPath: process.env['BACKEND_STATIC_FILES'],
-        serveRoot: '/api/static',
-      }),
+      rootPath: process.env['BACKEND_STATIC_FILES'],
+      serveRoot: '/api/static',
+    }),
     DatabaseModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [
     AppController,
@@ -32,6 +33,6 @@ import { AuthModule } from './modules/auth/auth.module';
     TeamController,
     SearchController,
   ],
-  providers: [AppService, FileService],
+  providers: [AppService, FileService, ContentService],
 })
 export class AppModule {}

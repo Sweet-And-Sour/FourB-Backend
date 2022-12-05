@@ -14,6 +14,8 @@ import { AuthService } from './services/auth/auth.service';
 import { LocalStrategy } from './services/auth/local.strategy';
 import { AuthModule } from './modules/auth/auth.module';
 import { ContentService } from './services/content/content.service';
+import { TagController } from 'src/controllers/tag/tag.controller';
+import { TagService } from 'src/services/tag/tag.service';
 
 @Module({
   imports: [
@@ -32,7 +34,8 @@ import { ContentService } from './services/content/content.service';
     FileController,
     TeamController,
     SearchController,
+    TagController,
   ],
-  providers: [AppService, FileService, ContentService],
+  providers: [AppService, FileService, ContentService, TagService],
 })
 export class AppModule {}

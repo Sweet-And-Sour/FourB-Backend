@@ -3,6 +3,7 @@ import { ConnectionService } from 'src/services/connection/connection.service';
 import { UserData } from 'src/interfaces/user-data.interface';
 import { ResetUserData } from 'src/interfaces/reset-user-data.interface';
 import { generatePassword } from '../auth/constants';
+import * as sendgridMail from '@sendgrid/mail';
 
 @Injectable()
 export class UserService {
@@ -95,23 +96,82 @@ export class UserService {
 
     const userData = (user as any)[0];
 
+    const token = generatePassword(128, '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz');
+    const base64Token = Buffer.from(token, "utf8").toString('base64');
+
     const resetUserData: ResetUserData = {
       username: userData.username,
       email: userData.email,
-      token: generatePassword(128),
+      password: '',
+      token: base64Token,
       expired: false,
       createdDatetime: new Date(),
     }
 
-    this.logger.log(`UserService.createResetToken: Created new token! (${username})`);
+    this.logger.log(`UserService.createResetToken: Created new token! (username: ${username})`);
 
     this.resetUsers.push(resetUserData);
-
-    console.log(this.resetUsers);
     return resetUserData;
   }
 
-  async sendResetEmail(resetUset: ResetUserData) {
+  sendResetEmail(resetUser: ResetUserData) {
+    const resetUrl = `${process.env['DOMAIN_NAME']}/reset?token=${resetUser.token}`;
+
+
+    sendgridMail.setApiKey(process.env['SENDGRID_EMAIL_API_KEY']);
+
+    const mail = {
+      to: resetUser.email,
+      from: process.env['SENDGRID_SENDER_EMAIL'],
+      subject: '[FourB] Reset your password',
+      text: `Password Reset Link: ${resetUrl}`,
+      html: `
+        <p>Hello ${resetUser.username}</p>
+        <p>We will send you the password reset link you requested.</p>
+        <p>Access with the following link: <a href="${resetUrl}" target="_blank">${resetUrl}</a></p>
+        <p>Thank you!</p>
+        <p>from The Sweet Team.</p>
+        <hr>
+        <p>안녕하세요 ${resetUser.username}님</p>
+        <p>귀하가 요청하신 패스워드 초기화 링크를 보내 드립니다.</p>
+        <p>다음 링크로 접속 하세요: <a href="${resetUrl}" target="_blank">${resetUrl}</a></p>
+        <p>감사합니다!</p>
+        <br />
+        <p>The Sweet Team 보냄.</p>
+        `,
+    };
     
+    sendgridMail
+      .send(mail)
+      .then(() => {
+        this.logger.log('UserService.sendResetEmail: Send password reset email with SendGrid');
+      })
+      .catch((error) => {
+        console.error(error)
+      });
+  }
+
+  async resetPassword(user: ResetUserData) {
+    let isRight = false;
+
+    for (const resetUser of this.resetUsers) {
+      if (resetUser.token === user.token && !resetUser.expired && resetUser.username === user.username) {
+        isRight = true;
+        resetUser.expired = true;
+        break;
+      }
+    }
+
+    if (!isRight) {
+      return false;
+    }
+
+    const updatedUser = (await this.getUser(user.username) as any)[0] as UserData;
+    updatedUser.password = user.password;
+
+    await this.update(updatedUser);
+
+    this.logger.log(`UserService.sendResetEmail: The user password is changed! (username: ${user.username})`);
+    return true;
   }
 }

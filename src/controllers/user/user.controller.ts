@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
 import { UserService } from 'src/services/user/user.service';
@@ -72,5 +72,23 @@ export class UserController {
       message: '회원 탈퇴',
       success: success,
     });
+  }
+
+  @ApiOperation({ summary: '사용자 패스워드 초기화' })
+  @Get('/reset/:username')
+  async createResetLink(@Param('username') username: string) {
+    const result = await this.userService.createResetToken(username);
+
+    if (result) {
+      return {
+        message: '패스워드 초기화 이메일을 전송했습니다',
+        success: true,
+      }
+    }
+    
+    return {
+      message: '패스워드 초기화 요청에 실패 했습니다 (username을 확인하세요)',
+      success: false,
+    }
   }
 }

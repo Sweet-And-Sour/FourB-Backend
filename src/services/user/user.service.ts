@@ -1,10 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConnectionService } from 'src/services/connection/connection.service';
 import { UserData } from 'src/interfaces/user-data.interface';
+import { ResetUserData } from 'src/interfaces/reset-user-data.interface';
+import { generatePassword } from '../auth/constants';
 
 @Injectable()
 export class UserService {
+  
   private readonly logger = new Logger(UserService.name);
+  private resetUsers: ResetUserData[] = [];
+
   constructor(private connectionService: ConnectionService) {}
 
   async getUser(username: string): Promise<any> {
@@ -73,5 +78,40 @@ export class UserService {
     }
 
     return true;
+  }
+
+  async createResetToken(username: string) {
+    const user = await this.getUser(username);
+    if (user === undefined) {
+      this.logger.warn('UserService.createResetToken: the username is not exists');
+      return false;
+    }
+
+    this.resetUsers.forEach((user: ResetUserData, index: number) => {
+      if (user.username === username) {
+        this.resetUsers[index].expired = true;
+      }
+    });
+
+    const userData = (user as any)[0];
+
+    const resetUserData: ResetUserData = {
+      username: userData.username,
+      email: userData.email,
+      token: generatePassword(128),
+      expired: false,
+      createdDatetime: new Date(),
+    }
+
+    this.logger.log(`UserService.createResetToken: Created new token! (${username})`);
+
+    this.resetUsers.push(resetUserData);
+
+    console.log(this.resetUsers);
+    return resetUserData;
+  }
+
+  async sendResetEmail(resetUset: ResetUserData) {
+    
   }
 }

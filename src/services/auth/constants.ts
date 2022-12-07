@@ -1,6 +1,6 @@
 import { randomFillSync } from 'crypto';
 
-const generatePassword = (
+export const generatePassword = (
   length = 20,
   wishlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$'
 ) => 

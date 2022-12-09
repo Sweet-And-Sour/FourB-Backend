@@ -9,6 +9,33 @@ import { UserService } from 'src/services/user/user.service';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @ApiOperation({ summary: '회원 정보 요청' })
+  @Get('/:username')
+  async getUser(@Param('username') username: string) {
+    const results = await this.userService.getUser(username) as any;
+
+    if (results === undefined) {
+      return {
+        message: '회원 정보가 존재하지 않습니다',
+        success: false,
+      }
+    }
+
+    const removeFields = [ 'id', 'password' ];
+
+    for (let index = 0; index < results.length; index++) {
+      for (const field of removeFields) {
+        delete results[index][field];
+      }
+    }
+
+    return {
+      message: '회원 정보 요청',
+      success: true,
+      data: results,
+    };
+  }
+
   @ApiOperation({ summary: '회원 가입' })
   @ApiBody({
     schema: {

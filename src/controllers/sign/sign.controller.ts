@@ -32,4 +32,12 @@ export class SignController {
   getPayload(@Request() req) {
     return req.user;
   }
+
+  @ApiOperation({ summary: '새로운 JWT 토큰 생성 (인증 필요)' })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
+  @Get('refresh')
+  getRefreshToken(@Request() req) {
+    return this.authService.getToken(req.user);
+  }
 }

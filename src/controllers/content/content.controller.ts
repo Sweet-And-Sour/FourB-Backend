@@ -1,13 +1,6 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
 import { ContentService } from 'src/services/content/content.service';
 
 @ApiTags('Content')
@@ -15,7 +8,7 @@ import { ContentService } from 'src/services/content/content.service';
 export class ContentController {
   constructor(private ContentService: ContentService) {}
 
-  @ApiOperation({ summary: '컨텐츠 생성' })
+  @ApiOperation({ summary: '컨텐츠 생성 (인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -27,6 +20,8 @@ export class ContentController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createContent(@Body() data) {
     const success = await this.ContentService.create(data);
@@ -52,7 +47,7 @@ export class ContentController {
     };
   }
 
-  @ApiOperation({ summary: '컨텐츠 수정' })
+  @ApiOperation({ summary: '컨텐츠 수정 (인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -62,6 +57,8 @@ export class ContentController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
   @Patch()
   async updateContent(@Body() data) {
     const success = await this.ContentService.update(data);
@@ -72,7 +69,7 @@ export class ContentController {
     });
   }
 
-  @ApiOperation({ summary: '컨텐츠 삭제' })
+  @ApiOperation({ summary: '컨텐츠 삭제 (인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -81,6 +78,8 @@ export class ContentController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
   @Delete()
   async deleteContent(@Body() data) {
     const success = await this.ContentService.delete(data);

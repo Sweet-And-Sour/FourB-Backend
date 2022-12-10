@@ -29,7 +29,7 @@ export class CategoryController {
   })
   @Post()
   async createCategory(@Body() data) {
-    const success = await this.categoryService.create(data);
+    const success = await this.categoryService.create(data.name);
 
 
     return Object.assign({

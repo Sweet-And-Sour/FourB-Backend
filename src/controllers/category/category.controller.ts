@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Delete, Patch, Body } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Delete, Patch, Body, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { LocalAuthGuard } from 'src/services/auth/local-auth.guard';
 import { CategoryService } from 'src/services/category/category.service';
 
 @ApiTags('Category')
@@ -39,7 +40,7 @@ export class CategoryController {
   }
 
 
-  @ApiOperation({ summary: '카테고리 수정 -- 관리자용 (인증필요)' })
+  @ApiOperation({ summary: '카테고리 수정 (인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -49,6 +50,8 @@ export class CategoryController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(LocalAuthGuard)
   @Patch()
   async updateCategory(@Body() data) {
     // TODO: 관리자용 (인증필요)
@@ -61,7 +64,7 @@ export class CategoryController {
   }
 
   
-  @ApiOperation({ summary: '카테고리 삭제' })
+  @ApiOperation({ summary: '카테고리 삭제 (인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -70,6 +73,8 @@ export class CategoryController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(LocalAuthGuard)
   @Delete()
   async deleteCategory(@Body() data) {
     

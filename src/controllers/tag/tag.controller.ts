@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Delete, Patch, Body } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Delete, Patch, Body, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { LocalAuthGuard } from 'src/services/auth/local-auth.guard';
 import { TagService } from 'src/services/tag/tag.service';
 
 @ApiTags('Tag')
@@ -8,15 +9,6 @@ export class TagController {
   constructor(private tagService: TagService) {}
 
   @ApiOperation({ summary: '태그 가져오기' })
-  // @ApiBody({
-  //   schema: {
-  //     type: 'object',
-  //     properties: {
-  //       tagname: { type: 'string' },
-  //     },
-  //   },
-  // })
-
   @Get()
   async getAllTag() {
       const results = await this.tagService.getAll();
@@ -48,7 +40,7 @@ export class TagController {
   }
 
 
-  @ApiOperation({ summary: '태그 수정' })
+  @ApiOperation({ summary: '태그 수정 (인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -58,6 +50,8 @@ export class TagController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(LocalAuthGuard)
   @Patch()
   async updateTag(@Body() data) {
     // TODO: 관리자용 (인증필요)
@@ -70,7 +64,7 @@ export class TagController {
   }
 
   
-  @ApiOperation({ summary: '태그 삭제' })
+  @ApiOperation({ summary: '태그 삭제 (인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -79,6 +73,8 @@ export class TagController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(LocalAuthGuard)
   @Delete()
   async deleteTag(@Body() data) {
     

@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Param, Delete, UseInterceptors, UploadedFile, Response } from '@nestjs/common';
+import { Controller, Get, Post, Param, Delete, UseInterceptors, UploadedFile, Response, UseGuards } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileService } from 'src/services/file/file.service';
 import { Response as Res } from 'express';
+import { LocalAuthGuard } from 'src/services/auth/local-auth.guard';
 
 @ApiTags('File')
 @Controller('file')
@@ -23,6 +24,8 @@ export class FileController {
     },
   })
   @UseInterceptors(FileInterceptor('file'))
+  @ApiBearerAuth('access-token')
+  @UseGuards(LocalAuthGuard)
   @Post()
   async createFile(@UploadedFile('file') file: Express.Multer.File) {
     return this.fileService.createFile(file);
@@ -48,6 +51,8 @@ export class FileController {
   }
 
   @ApiOperation({ summary: '파일 삭제 (인증 필요)' })
+  @ApiBearerAuth('access-token')
+  @UseGuards(LocalAuthGuard)
   @Delete('/:filename')
   async deleteFile(@Param('filename') filename: string) {
     return await this.fileService.deleteFile(filename);

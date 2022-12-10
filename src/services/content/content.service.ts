@@ -9,10 +9,11 @@ export class ContentService {
 
   async create(data: Contentdata) {
     try {
-      this.connectionService.pool.execute(
-        'INSERT INTO Contents ( user_id, title,contents) VALUES (?,?,?)',
-        [data.user_id, data.title, data.contents],
-      );
+      this.connectionService.pool.execute('INSERT INTO Contents ( user_id, title,contents) VALUES (?,?,?)', [
+        data.user_id,
+        data.title,
+        data.contents,
+      ]);
     } catch (e) {
       this.logger.error(e);
       return false;
@@ -23,10 +24,7 @@ export class ContentService {
 
   async read(id: number) {
     try {
-      const [rows] = await this.connectionService.pool.execute(
-        'SELECT * FROM Contents WHERE id=?',
-        [id],
-      );
+      const [rows] = await this.connectionService.pool.execute('SELECT * FROM Contents WHERE id=?', [id]);
 
       return rows;
     } catch (e) {
@@ -37,10 +35,7 @@ export class ContentService {
 
   async update(data: Contentdata) {
     try {
-      this.connectionService.pool.execute('UPDATE Contents SET contents=? WHERE id=?', [
-        data.contents,
-        data.id,
-      ]);
+      this.connectionService.pool.execute('UPDATE Contents SET contents=? WHERE id=?', [data.contents, data.id]);
     } catch (e) {
       this.logger.error(e);
       return false;

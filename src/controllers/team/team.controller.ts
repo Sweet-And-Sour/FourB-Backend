@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Patch, Post, Param, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Patch,
+  Post,
+  Param,
+  Get,
+} from '@nestjs/common';
 import { ApiBody, ApiParam, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { TeamService } from 'src/services/team/team.service';
 

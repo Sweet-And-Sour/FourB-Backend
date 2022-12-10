@@ -43,6 +43,21 @@ export class FileService {
     return undefined;
   }
 
+  async getFileFromHash(hash: string) {
+    try {
+      const [rows] = await this.connectionService.pool.execute(
+        'SELECT * FROM Files WHERE hash_id=?',
+        [hash],
+      );
+
+      return rows;
+    } catch (e) {
+      this.logger.error(e);
+    }
+
+    return undefined;
+  }
+
   getHash(data: any) {
     return crypto.createHash('sha512').update(data).digest('base64');
   }
@@ -52,9 +67,24 @@ export class FileService {
     const hash = this.getHash(file.buffer);
 
     if (await this.isHashExist(hash)) {
-      return {
-        message: '이미 해당 파일은 등록되어 있습니다.',
-        success: false,
+      const result = await this.getFileFromHash(hash) as any;
+
+      if (result !== undefined && result.length >= 1) {
+        const file = result[0];
+
+        return {
+          message: '이미 해당 파일은 등록되어 있습니다',
+          success: true,
+          filename: file.filename,
+          url: `/api/static/${file.filename}`,
+        }
+      } else {
+        this.logger.error('FileService.createFile: 이미 존재하는 파일의 데이터를 확인할 수 없습니다');
+        
+        return {
+          message: '알 수 없는 오류가 발생했습니다',
+          success: false,
+        }
       }
     }
 

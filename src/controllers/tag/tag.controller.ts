@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Delete, Patch, Body, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { LocalAuthGuard } from 'src/services/auth/local-auth.guard';
+import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
 import { TagService } from 'src/services/tag/tag.service';
 
 @ApiTags('Tag')
@@ -51,7 +51,7 @@ export class TagController {
     },
   })
   @ApiBearerAuth('access-token')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch()
   async updateTag(@Body() data) {
     // TODO: 관리자용 (인증필요)
@@ -74,7 +74,7 @@ export class TagController {
     },
   })
   @ApiBearerAuth('access-token')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete()
   async deleteTag(@Body() data) {
     

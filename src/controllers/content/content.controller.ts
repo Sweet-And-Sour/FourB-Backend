@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { LocalAuthGuard } from 'src/services/auth/local-auth.guard';
+import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
 import { ContentService } from 'src/services/content/content.service';
 
 @ApiTags('Content')
@@ -21,7 +21,7 @@ export class ContentController {
     },
   })
   @ApiBearerAuth('access-token')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createContent(@Body() data) {
     const success = await this.ContentsService.create(data);
@@ -58,7 +58,7 @@ export class ContentController {
     },
   })
   @ApiBearerAuth('access-token')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch()
   async updateContent(@Body() data) {
     const success = await this.ContentsService.update(data);
@@ -79,7 +79,7 @@ export class ContentController {
     },
   })
   @ApiBearerAuth('access-token')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete()
   async deleteContent(@Body() data) {
     const success = await this.ContentsService.delete(data);

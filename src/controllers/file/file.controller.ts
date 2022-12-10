@@ -3,7 +3,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileService } from 'src/services/file/file.service';
 import { Response as Res } from 'express';
-import { LocalAuthGuard } from 'src/services/auth/local-auth.guard';
+import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
 
 @ApiTags('File')
 @Controller('file')
@@ -25,7 +25,7 @@ export class FileController {
   })
   @UseInterceptors(FileInterceptor('file'))
   @ApiBearerAuth('access-token')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createFile(@UploadedFile('file') file: Express.Multer.File) {
     return this.fileService.createFile(file);
@@ -52,7 +52,7 @@ export class FileController {
 
   @ApiOperation({ summary: '파일 삭제 (인증 필요)' })
   @ApiBearerAuth('access-token')
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete('/:filename')
   async deleteFile(@Param('filename') filename: string) {
     return await this.fileService.deleteFile(filename);

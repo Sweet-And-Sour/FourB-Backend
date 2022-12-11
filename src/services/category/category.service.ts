@@ -22,14 +22,41 @@ export class CategoryService {
     return false;
   }
 
+  async categoryCount() {
+    const [rows] = await this.connectionService.pool.execute(
+      'select category, count(id) as count from contents group by category;',
+      []
+    );
+
+    const result = rows as any;
+    const converted = {};
+
+    for (let index = 0; index < result.length; index++) {
+      const title = result[index].category;
+      const value = result[index].count;
+
+      converted[title] = value;
+    }
+
+    return converted;
+  }
+
   async getAll(): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT name FROM Categories',
+        'SELECT name, thumbnail FROM Categories',
         [],
       );
 
-      return rows;
+      const result = rows as any;
+      const counts = await this.categoryCount() as any;
+
+      for (let index = 0; index < result.length; index++) {
+        const title = result[index].name;
+        result[index].count = counts[title] || 0;
+      }
+
+      return result;
     } catch (e) {
       console.error(e);
       this.logger.error(e);

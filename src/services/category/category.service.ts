@@ -44,19 +44,14 @@ export class CategoryService {
   async getAll(): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT name, thumbnail FROM Categories',
+        `SELECT name, thumbnail, count FROM Categories JOIN
+        (SELECT category, count(id) AS count FROM contents GROUP BY category) AS A
+        ON Categories.name = A.category
+        ORDER BY count DESC`,
         [],
       );
 
-      const result = rows as any;
-      const counts = await this.categoryCount() as any;
-
-      for (let index = 0; index < result.length; index++) {
-        const title = result[index].name;
-        result[index].count = counts[title] || 0;
-      }
-
-      return result;
+      return rows;
     } catch (e) {
       console.error(e);
       this.logger.error(e);

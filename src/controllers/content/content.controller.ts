@@ -51,12 +51,19 @@ export class ContentController {
   })
   @Get(':id')
   async readContent(@Param() params) {
-    const results = await this.ContentService.read(params.id);
+    const result = await this.ContentService.read(params.id);
+
+    if (result === undefined) {
+      return {
+        message: '게시글이 존재하지 않습니다',
+        success: false,
+      }
+    }
 
     return {
       message: '게시글 불러오기',
-      success: results !== undefined,
-      results: results,
+      success: true,
+      content: result,
     };
   }
 

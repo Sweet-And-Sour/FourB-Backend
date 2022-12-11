@@ -13,6 +13,25 @@ export class UserService {
 
   constructor(private connectionService: ConnectionService) {}
 
+  async getUserFromId(userId: number): Promise<any> {
+    try {
+      const [rows] = await this.connectionService.pool.execute(
+        'SELECT * FROM Users WHERE id=?',
+        [userId],
+      );
+
+      if ((rows as any).length === 1) {
+        return rows as any;
+      } else {
+        return undefined;
+      }
+    } catch (e) {
+      this.logger.error(e);
+    }
+
+    return undefined;
+  }
+
   async getUser(username: string): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(

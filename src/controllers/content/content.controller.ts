@@ -26,7 +26,7 @@ export class ContentController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createContent(@Body() data) {
-    const success = await this.ContentService.create(data);
+    const result = await this.ContentService.create(data);
 
     if (result === undefined) {
       return {

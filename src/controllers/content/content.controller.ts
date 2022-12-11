@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
 import { ContentService } from 'src/services/content/content.service';
 
@@ -42,6 +42,30 @@ export class ContentController {
       success: true,
       contentId: contentId,
       url: `/view?id=${contentId}`,
+    };
+  }
+
+  @ApiOperation({ summary: '모든 컨텐츠 요청' })
+  @ApiQuery({
+    name: 'page',
+    required: true,
+    description: '페이지 번호'
+  })
+  @ApiQuery({
+    name: 'orderBy',
+    required: true,
+    description: '정렬 방식'
+  })
+  @Get('/all')
+  async allContent(@Query() query) {
+    const result = await this.ContentService.getAll(query.page, query.orderBy);
+
+    return {
+      message: '전체 게시글 불러오기',
+      success: true,
+      page: query.page,
+      orderBy: query.orderBy,
+      contents: result,
     };
   }
 

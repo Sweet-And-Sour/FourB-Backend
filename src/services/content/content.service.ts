@@ -80,4 +80,22 @@ export class ContentService {
 
     return true;
   }
+
+  async getAll(page: number, orderBy: string) {
+    try {
+      const [rows] = await this.connectionService.pool.execute(
+        `SELECT * FROM Contents
+        ORDER BY '${orderBy}' DESC
+        LIMIT ${page * 10}, 10`,
+        []
+      );
+
+      return rows;
+
+    } catch (e) {
+      this.logger.error(e);
+    }
+
+    return undefined;
+  }
 }

@@ -6,7 +6,7 @@ import { ContentService } from 'src/services/content/content.service';
 @ApiTags('Content')
 @Controller('content')
 export class ContentController {
-  constructor(private ContentsService: ContentService) {}
+  constructor(private ContentService: ContentService) {}
 
   @ApiOperation({ summary: '컨텐츠 생성 (인증 필요)' })
   @ApiBody({
@@ -26,7 +26,7 @@ export class ContentController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createContent(@Body() data) {
-    const result = await this.ContentsService.create(data);
+    const success = await this.ContentService.create(data);
 
     if (result === undefined) {
       return {
@@ -51,7 +51,7 @@ export class ContentController {
   })
   @Get(':id')
   async readContent(@Param() params) {
-    const results = await this.ContentsService.read(params.id);
+    const results = await this.ContentService.read(params.id);
 
     return {
       message: '게시글 불러오기',
@@ -74,7 +74,7 @@ export class ContentController {
   @UseGuards(JwtAuthGuard)
   @Patch()
   async updateContent(@Body() data) {
-    const success = await this.ContentsService.update(data);
+    const success = await this.ContentService.update(data);
 
     return Object.assign({
       message: '게시글 수정',
@@ -95,7 +95,7 @@ export class ContentController {
   @UseGuards(JwtAuthGuard)
   @Delete()
   async deleteContent(@Body() data) {
-    const success = await this.ContentsService.delete(data);
+    const success = await this.ContentService.delete(data);
 
     return Object.assign({
       message: '게시글 삭제',

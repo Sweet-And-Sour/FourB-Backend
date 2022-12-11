@@ -14,7 +14,7 @@ export class CategoryService {
         'SELECT name FROM Categories WHERE name=?',
         [categoryname],
       );
-  return (rows as any).length > 0;
+      return (rows as any).length > 0;
     } catch (e) {
       this.logger.error(e);
     }
@@ -22,7 +22,7 @@ export class CategoryService {
     return false;
   }
 
-    async getAll(): Promise<any> {
+  async getAll(): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
         'SELECT name FROM Categories',
@@ -30,19 +30,20 @@ export class CategoryService {
       );
 
       return rows;
-
     } catch (e) {
-        console.error(e);
-        this.logger.error(e);
-        return undefined;
+      console.error(e);
+      this.logger.error(e);
+      return undefined;
     }
   }
 
-     async create(categoryname: string) {
-      if (await this.categoryExist(categoryname)) {
-        this.logger.warn(`CategoryService.create: the categoryname is not exists (name: ${categoryname})`);
-        return false;
-      }
+  async create(categoryname: string) {
+    if (await this.categoryExist(categoryname)) {
+      this.logger.warn(
+        `CategoryService.create: the categoryname is not exists (name: ${categoryname})`,
+      );
+      return false;
+    }
 
     try {
       this.connectionService.pool.execute(
@@ -57,29 +58,32 @@ export class CategoryService {
     return true;
   }
 
-   async update(oldname: string, newname: string) {
+  async update(oldname: string, newname: string) {
     if (!(await this.categoryExist(oldname))) {
-       this.logger.warn(`CategoryService.update: the categoryname is not exists (newname: ${newname}, oldname: ${
-      oldname})`);
+      this.logger.warn(
+        `CategoryService.update: the categoryname is not exists (newname: ${newname}, oldname: ${oldname})`,
+      );
       return false;
     }
 
-   try {
+    try {
       console.log(newname, oldname);
       this.connectionService.pool.execute(
         'UPDATE Categories SET name=? WHERE name=?',
         [newname, oldname],
       );
-       } catch (e) {
+    } catch (e) {
       return false;
     }
 
     return true;
   }
 
-   async delete(categoryname: string) {
+  async delete(categoryname: string) {
     if (!(await this.categoryExist(categoryname))) {
-      this.logger.warn('CategoryService.delete: the categoryname is not exists');
+      this.logger.warn(
+        'CategoryService.delete: the categoryname is not exists',
+      );
       return false;
     }
 
@@ -89,7 +93,7 @@ export class CategoryService {
         [categoryname],
       );
     } catch (e) {
-        console.error(e);
+      console.error(e);
       this.logger.error(e);
       return false;
     }

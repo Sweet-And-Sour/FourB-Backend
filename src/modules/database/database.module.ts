@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UserService } from 'src/services/user/user.service';
-import { TeamService } from 'src/services/team/team.service';
 import { ConnectionService } from 'src/services/connection/connection.service';
+import { UserService } from 'src/services/user/user.service';
 
 @Module({
-  providers: [UserService, TeamService, ConnectionService],
-  exports: [UserService, TeamService, ConnectionService],
+  providers: [UserService, ConnectionService],
+  exports: [UserService, ConnectionService],
 })
 export class DatabaseModule {}

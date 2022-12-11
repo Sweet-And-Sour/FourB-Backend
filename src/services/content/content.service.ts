@@ -5,7 +5,6 @@ import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ContentService {
-
   private readonly logger = new Logger(ContentService.name);
   
   constructor (
@@ -15,7 +14,6 @@ export class ContentService {
 
   async create(data: ContentData) {
     const users: any = await this.userService.getUser(data.username);
-
 
     if (users === undefined || users.length === 0) {
       return false;
@@ -47,10 +45,7 @@ export class ContentService {
 
   async read(id: number) {
     try {
-      const [rows] = await this.connectionService.pool.execute(
-        'SELECT * FROM Contents WHERE id=?',
-        [id],
-      );
+      const [rows] = await this.connectionService.pool.execute('SELECT * FROM Contents WHERE id=?', [id]);
 
       return rows;
     } catch (e) {
@@ -61,10 +56,7 @@ export class ContentService {
 
   async update(data: ContentData) {
     try {
-      this.connectionService.pool.execute('UPDATE Contents SET contents=? WHERE id=?', [
-        data.contents,
-        data.id,
-      ]);
+      this.connectionService.pool.execute('UPDATE Contents SET contents=? WHERE id=?', [data.contents, data.id]);
     } catch (e) {
       this.logger.error(e);
       return false;

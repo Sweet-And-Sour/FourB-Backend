@@ -12,9 +12,8 @@ export class TagService {
         'SELECT name FROM Tags WHERE name=?',
         [tagname],
       );
-      
-      return (rows as any).length > 0;
 
+      return (rows as any).length > 0;
     } catch (e) {
       this.logger.error(e);
     }
@@ -22,7 +21,7 @@ export class TagService {
     return false;
   }
 
-    async getAll(): Promise<any> {
+  async getAll(): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
         'SELECT name FROM Tags',
@@ -30,66 +29,67 @@ export class TagService {
       );
 
       return rows;
-
     } catch (e) {
-        console.error(e);
-        this.logger.error(e);
-        return undefined;
+      console.error(e);
+      this.logger.error(e);
+      return undefined;
     }
   }
 
-    async create(name: string) {
-      if (await this.tagExist(name)) {
-        this.logger.warn(`TagService.create: the tagname is not exists (name: ${name})`);
-        return false;
-      }
-
-      try {
-        this.connectionService.pool.execute(
-          'INSERT INTO Tags (name) VALUES (?)',
-          [name],
-        );
-      } catch (e) {
-        this.logger.error(e);
-        return false;
-      }
-
-      return true;
-    }
-
-   async update(oldname: string, newname: string) {
-    if (!(await this.tagExist(oldname))) {
-      this.logger.warn(`TagService.update: the tagname is not exists (newname: ${newname}, oldname: ${
-      oldname})`);
+  async create(name: string) {
+    if (await this.tagExist(name)) {
+      this.logger.warn(
+        `TagService.create: the tagname is not exists (name: ${name})`,
+      );
       return false;
     }
 
-   try { 
-      console.log(newname, oldname);
+    try {
       this.connectionService.pool.execute(
-        'UPDATE Tags SET name=? WHERE name=?',
-        [newname, oldname],
+        'INSERT INTO Tags (name) VALUES (?)',
+        [name],
       );
-       } catch (e) {
+    } catch (e) {
+      this.logger.error(e);
       return false;
     }
 
     return true;
   }
 
-   async delete(tagname: string) {
+  async update(oldname: string, newname: string) {
+    if (!(await this.tagExist(oldname))) {
+      this.logger.warn(
+        `TagService.update: the tagname is not exists (newname: ${newname}, oldname: ${oldname})`,
+      );
+      return false;
+    }
+
+    try {
+      console.log(newname, oldname);
+      this.connectionService.pool.execute(
+        'UPDATE Tags SET name=? WHERE name=?',
+        [newname, oldname],
+      );
+    } catch (e) {
+      return false;
+    }
+
+    return true;
+  }
+
+  async delete(tagname: string) {
     if (!(await this.tagExist(tagname))) {
       this.logger.warn('TagService.delete: the tagname is not exists');
       return false;
     }
 
     try {
-      this.connectionService.pool.execute(
-        'DELETE FROM Tags WHERE name=?',
-        [tagname],
-      );
+      this.connectionService.pool.execute('DELETE FROM Tags WHERE name=?', [
+        tagname,
+      ]);
     } catch (e) {
-        console.error(e);
+      console.error(e);
       this.logger.error(e);
       return false;
     }

@@ -11,7 +11,7 @@ export class CategoryController {
   @ApiOperation({ summary: '카테고리 가져오기' })
   @Get()
   async getAllCategory() {
-      const results = await this.categoryService.getAll();
+    const results = await this.categoryService.getAll();
 
     return Object.assign({
       message: `카테고리 전체 목록 가져오기`,

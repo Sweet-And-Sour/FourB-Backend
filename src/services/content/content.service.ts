@@ -44,14 +44,18 @@ export class ContentService {
   }
 
   async read(id: number) {
-    try {
-      const [rows] = await this.connectionService.pool.execute('SELECT * FROM Contents WHERE id=?', [id]);
+    const [rows] = await this.connectionService.pool.execute('SELECT * FROM Contents WHERE id=?', [id]);
 
-      return rows;
-    } catch (e) {
-      this.logger.error(e);
+    if ((rows as any).length === 0) {
       return undefined;
     }
+
+    const content = rows[0];
+    const author = await this.userService.getUserFromId(content.user_id);
+
+    content.username = author ? author[0].username : '';
+
+    return content;
   }
 
   async update(data: ContentData) {

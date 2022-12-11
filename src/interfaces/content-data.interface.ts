@@ -1,5 +1,6 @@
-export interface Contentdata {
+export interface ContentData {
   id: number;
+  username: string,
   user_id: number;
   team_id: number;
   title: string;

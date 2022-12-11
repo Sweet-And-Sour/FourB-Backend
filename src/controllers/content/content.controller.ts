@@ -13,10 +13,12 @@ export class ContentController {
     schema: {
       type: 'object',
       properties: {
-        user_id: { type: 'number' },
+        username: { type: 'string' },
         title: { type: 'string' },
         contents: { type: 'string' },
-        // TODO: 게시글 작성 항목 추가
+        category: { type: 'string' },
+        tags: { type: 'string' },
+        thumbnail: { type: 'string' },
       },
     },
   })
@@ -24,12 +26,23 @@ export class ContentController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createContent(@Body() data) {
-    const success = await this.ContentsService.create(data);
+    const result = await this.ContentsService.create(data);
 
-    return Object.assign({
+    if (result === undefined) {
+      return {
+        message: '게시글 작성 실패',
+        success: false,
+      }
+    }
+
+    const contentId = result[0].insertId;
+
+    return {
       message: '게시글 작성',
-      success: success,
-    });
+      success: true,
+      contentId: contentId,
+      url: `/view?id=${contentId}`,
+    };
   }
 
   @ApiOperation({ summary: '컨텐츠 요청' })

@@ -1,24 +1,48 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConnectionService } from 'src/services/connection/connection.service';
-import { Contentdata } from 'src/interfaces/content-data.interface';
+import { ContentData } from 'src/interfaces/content-data.interface';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ContentService {
-  private readonly logger = new Logger(ContentService.name);
-  constructor(private connectionService: ConnectionService) {}
 
-  async create(data: Contentdata) {
-    try {
-      this.connectionService.pool.execute(
-        'INSERT INTO Contents ( user_id, title,contents) VALUES (?,?,?)',
-        [data.user_id, data.title, data.contents],
-      );
-    } catch (e) {
-      this.logger.error(e);
+  private readonly logger = new Logger(ContentService.name);
+  
+  constructor (
+    private connectionService: ConnectionService,
+    private userService: UserService
+  ) {}
+
+  async create(data: ContentData) {
+    const users: any = await this.userService.getUser(data.username);
+
+
+    if (users === undefined || users.length === 0) {
       return false;
     }
 
-    return true;
+    const user = users[0];
+
+    try {
+      const result = await this.connectionService.pool.execute(
+        'INSERT INTO Contents (user_id, title, contents, category, tags) VALUES (?,?,?,?,?)',
+        [
+          user.id,
+          data.title,
+          data.contents,
+          data.category,
+          data.tags
+        ],
+      );
+
+      return result;
+      
+    } catch (e) {
+      this.logger.error(e);
+      return undefined;
+    }
+
+    return undefined;
   }
 
   async read(id: number) {
@@ -35,7 +59,7 @@ export class ContentService {
     }
   }
 
-  async update(data: Contentdata) {
+  async update(data: ContentData) {
     try {
       this.connectionService.pool.execute('UPDATE Contents SET contents=? WHERE id=?', [
         data.contents,
@@ -49,7 +73,7 @@ export class ContentService {
     return true;
   }
 
-  async delete(data: Contentdata) {
+  async delete(data: ContentData) {
     try {
       this.connectionService.pool.execute('DELETE FROM Contents WHERE id=?', [data.id]);
     } catch (e) {

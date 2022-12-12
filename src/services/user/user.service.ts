@@ -15,16 +15,15 @@ export class UserService {
 
   async getUserFromId(userId: number, type: string): Promise<any> {
     let query = 'SELECT * FROM Users WHERE id=?';
+    let params: Array<any> = [userId];
 
     if (type !== "ALL") {
       query += ' and type=?';
+      params.push(type);
     }
 
     try {
-      const [rows] = await this.connectionService.pool.execute(
-        query,
-        [userId, type],
-      );
+      const [rows] = await this.connectionService.pool.execute(query, params);
 
       if ((rows as any).length === 1) {
         return rows as any;
@@ -40,16 +39,15 @@ export class UserService {
 
   async getUser(username: string, type: string): Promise<any> {
     let query = 'SELECT * FROM Users WHERE username=?';
+    let params: Array<any> = [username];
 
     if (type !== "ALL") {
       query += ' and type=?';
+      params.push(type)
     }
 
     try {
-      const [rows] = await this.connectionService.pool.execute(
-        query,
-        [username, type],
-      );
+      const [rows] = await this.connectionService.pool.execute(query, params);
 
       if ((rows as any).length === 1) {
         return rows as any;

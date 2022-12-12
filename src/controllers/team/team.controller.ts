@@ -35,7 +35,7 @@ export class TeamController {
     };
   }
 
-  @ApiOperation({ summary: '팀 생성' })
+  @ApiOperation({ summary: '팀 생성(인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',
@@ -46,6 +46,8 @@ export class TeamController {
       },
     },
   })
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createUser(@Body() data) {
     const success = await this.userService.create(data, "TEAM");

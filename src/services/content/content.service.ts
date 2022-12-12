@@ -23,13 +23,14 @@ export class ContentService {
 
     try {
       const result = await this.connectionService.pool.execute(
-        'INSERT INTO Contents (user_id, title, contents, category, tags) VALUES (?,?,?,?,?)',
+        'INSERT INTO Contents (user_id, title, contents, category, tags, thumbnail) VALUES (?,?,?,?,?,?)',
         [
           user.id,
           data.title,
           data.contents,
           data.category,
-          data.tags
+          data.tags,
+          data.thumbnail
         ],
       );
 

@@ -11,4 +11,5 @@ export interface ContentData {
   unlike: number;
   category: string;
   tags: [string];
+  thumbnail: string,
 }

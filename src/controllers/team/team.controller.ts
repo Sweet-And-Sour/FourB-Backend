@@ -56,7 +56,7 @@ export class TeamController {
     });
   }
 
-  @ApiOperation({ summary: '유저 정보 수정(인증 필요)' })
+  @ApiOperation({ summary: '팀 정보 수정(인증 필요)' })
   @ApiBody({
     schema: {
       type: 'object',

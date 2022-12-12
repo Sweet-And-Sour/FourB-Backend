@@ -62,9 +62,15 @@ export class UserController {
     schema: {
       type: 'object',
       properties: {
-        email: { type: 'string' },
         username: { type: 'string' },
+        email: { type: 'string' },
         password: { type: 'string' },
+        background: { type: 'string' },
+        avatar: { type: 'string' },
+        introduction: { type: 'string' },
+        site: { type: 'string' },
+        friends: { type: 'string' },
+        field: { type: 'string' },
       },
     },
   })
@@ -74,10 +80,10 @@ export class UserController {
   async updateUser(@Body() data) {
     const success = await this.userService.update(data);
 
-    return Object.assign({
+    return {
       message: '회원 정보 수정',
       success: success,
-    });
+    };
   }
 
   @ApiOperation({ summary: '회원 탈퇴 및 회원 정보 삭제(인증 필요)' })

@@ -72,9 +72,33 @@ export class UserService {
     }
 
     try {
+      const properties = [
+        'email',
+        'password',
+        'background',
+        'avatar',
+        'introduction',
+        'site',
+        'friends',
+        'field'
+      ];
+
+      let query = ''
+      let params = []
+
+      for (const property of properties) {
+        if (data[property]) {
+          query += ` ${property}=?,`;
+          params.push(data[property]);
+        }
+      }
+
+      query = query.substring(0, query.length - 1);
+      params.push(data.username);
+
       this.connectionService.pool.execute(
-        'UPDATE Users SET email=?, password=? WHERE username=?',
-        [data.email, data.password, data.username],
+        `UPDATE Users SET${query} WHERE username=?`,
+        params,
       );
     } catch (e) {
       return false;

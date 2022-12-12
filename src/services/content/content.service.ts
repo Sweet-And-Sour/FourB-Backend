@@ -13,7 +13,7 @@ export class ContentService {
   ) {}
 
   async create(data: ContentData) {
-    const users: any = await this.userService.getUser(data.username);
+    const users: any = await this.userService.getUser(data.username, "ALL");
 
     if (users === undefined || users.length === 0) {
       return false;
@@ -53,7 +53,7 @@ export class ContentService {
     }
 
     const content = rows[0];
-    const author = await this.userService.getUserFromId(content.user_id);
+    const author = await this.userService.getUserFromId(content.user_id, "ALL");
 
     content.username = author ? author[0].username : '';
 

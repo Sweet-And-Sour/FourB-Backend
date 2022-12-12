@@ -11,7 +11,7 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, password: string) {
-    const results = await this.userService.getUser(username);
+    const results = await this.userService.getUser(username, "ALL");
 
     if (results && results.length != 0) {
       const user = results[0];

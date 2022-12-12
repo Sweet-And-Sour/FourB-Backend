@@ -14,9 +14,15 @@ export class UserService {
   constructor(private connectionService: ConnectionService) {}
 
   async getUserFromId(userId: number, type: string): Promise<any> {
+    let query = 'SELECT * FROM Users WHERE id=?';
+
+    if (type !== "ALL") {
+      query += ' and type=?';
+    }
+
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT * FROM Users WHERE id=? and type=?',
+        query,
         [userId, type],
       );
 
@@ -33,9 +39,15 @@ export class UserService {
   }
 
   async getUser(username: string, type: string): Promise<any> {
+    let query = 'SELECT * FROM Users WHERE username=?';
+
+    if (type !== "ALL") {
+      query += ' and type=?';
+    }
+
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT * FROM Users WHERE username=? and type=?',
+        query,
         [username, type],
       );
 

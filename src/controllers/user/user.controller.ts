@@ -12,7 +12,7 @@ export class UserController {
   @ApiOperation({ summary: '회원 정보 요청' })
   @Get('/:username')
   async getUser(@Param('username') username: string) {
-    const results = await this.userService.getUser(username) as any;
+    const results = await this.userService.getUser(username, "USER") as any;
 
     if (results === undefined) {
       return {
@@ -49,7 +49,7 @@ export class UserController {
   })
   @Post()
   async createUser(@Body() data) {
-    const success = await this.userService.create(data);
+    const success = await this.userService.create(data, "USER");
 
     return Object.assign({
       message: '회원 가입',
@@ -78,7 +78,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch()
   async updateUser(@Body() data) {
-    const success = await this.userService.update(data);
+    const success = await this.userService.update(data, "USER");
 
     return {
       message: '회원 정보 수정',
@@ -99,7 +99,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Delete()
   async deleteUser(@Body() data) {
-    const success = await this.userService.delete(data.username);
+    const success = await this.userService.delete(data.username, "USER");
 
     return Object.assign({
       message: '회원 탈퇴',
@@ -110,7 +110,7 @@ export class UserController {
   @ApiOperation({ summary: '사용자 패스워드 초기화 요청' })
   @Get('/reset/:username')
   async createResetLink(@Param('username') username: string) {
-    const result = await this.userService.createResetToken(username);
+    const result = await this.userService.createResetToken(username, "USER");
 
     if (result) {
       this.userService.sendResetEmail(result);
@@ -140,7 +140,7 @@ export class UserController {
   })
   @Post('/reset')
   async resetPassword(@Body() data) {
-    const result = await this.userService.resetPassword(data);
+    const result = await this.userService.resetPassword(data, "USER");
   
     return {
       message: '패스워드 초기화',

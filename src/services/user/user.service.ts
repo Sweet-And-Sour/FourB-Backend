@@ -13,11 +13,11 @@ export class UserService {
 
   constructor(private connectionService: ConnectionService) {}
 
-  async getUserFromId(userId: number): Promise<any> {
+  async getUserFromId(userId: number, type: string): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT * FROM Users WHERE id=?',
-        [userId],
+        'SELECT * FROM Users WHERE id=? and type=?',
+        [userId, type],
       );
 
       if ((rows as any).length === 1) {
@@ -32,11 +32,11 @@ export class UserService {
     return undefined;
   }
 
-  async getUser(username: string): Promise<any> {
+  async getUser(username: string, type: string): Promise<any> {
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT * FROM Users WHERE username=?',
-        [username],
+        'SELECT * FROM Users WHERE username=? and type=?',
+        [username, type],
       );
 
       if ((rows as any).length === 1) {
@@ -51,11 +51,11 @@ export class UserService {
     return undefined;
   }
 
-  async create(data: UserData) {
+  async create(data: UserData, type: string) {
     try {
       this.connectionService.pool.execute(
-        'INSERT INTO Users (username, password, email) VALUES (?, ?, ?)',
-        [data.username, data.password, data.email],
+        'INSERT INTO Users (username, password, email, type) VALUES (?, ?, ?, ?)',
+        [data.username, data.password, data.email, type],
       );
     } catch (e) {
       this.logger.error(e);
@@ -65,8 +65,8 @@ export class UserService {
     return true;
   }
 
-  async update(data: UserData) {
-    if ((await this.getUser(data.username)) === undefined) {
+  async update(data: UserData, type: string) {
+    if ((await this.getUser(data.username, type)) === undefined) {
       this.logger.warn('UserService.update: the username is not exists');
       return false;
     }
@@ -107,8 +107,8 @@ export class UserService {
     return true;
   }
 
-  async delete(username: string) {
-    if ((await this.getUser(username)) === undefined) {
+  async delete(username: string, type: string) {
+    if ((await this.getUser(username, type)) === undefined) {
       this.logger.warn('UserService.delete: the username is not exists');
       return false;
     }
@@ -126,8 +126,8 @@ export class UserService {
     return true;
   }
 
-  async createResetToken(username: string) {
-    const user = await this.getUser(username);
+  async createResetToken(username: string, type: string) {
+    const user = await this.getUser(username, type);
     if (user === undefined) {
       this.logger.warn('UserService.createResetToken: the username is not exists');
       return false;
@@ -196,7 +196,7 @@ export class UserService {
       });
   }
 
-  async resetPassword(user: ResetUserData) {
+  async resetPassword(user: ResetUserData, type: string) {
     let isRight = false;
 
     for (const resetUser of this.resetUsers) {
@@ -211,10 +211,10 @@ export class UserService {
       return false;
     }
 
-    const updatedUser = (await this.getUser(user.username) as any)[0] as UserData;
+    const updatedUser = (await this.getUser(user.username, type) as any)[0] as UserData;
     updatedUser.password = user.password;
 
-    await this.update(updatedUser);
+    await this.update(updatedUser, type);
 
     this.logger.log(`UserService.sendResetEmail: The user password is changed! (username: ${user.username})`);
     return true;

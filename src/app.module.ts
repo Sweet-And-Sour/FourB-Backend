@@ -18,6 +18,8 @@ import { TagController } from 'src/controllers/tag/tag.controller';
 import { TagService } from 'src/services/tag/tag.service';
 import { TeamService } from './services/team/team.service';
 import { SearchService } from './services/search/search.service';
+import { CommentController } from './controllers/comment/comment.controller';
+import { CommentService } from './services/comment/comment.service';
 
 @Module({
   imports: [
@@ -38,6 +40,7 @@ import { SearchService } from './services/search/search.service';
     SearchController,
     CategoryController,
     TagController,
+    CommentController,
   ],
   providers: [
     AppService,
@@ -47,6 +50,7 @@ import { SearchService } from './services/search/search.service';
     FileService,
     ContentService,
     TagService,
+    CommentService,
   ],
 })
 export class AppModule {}

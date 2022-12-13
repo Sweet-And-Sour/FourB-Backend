@@ -45,7 +45,7 @@ export class CategoryService {
     try {
       const [rows] = await this.connectionService.pool.execute(
         `SELECT name, thumbnail, ifnull(count, 0) as count FROM Categories
-        LEFT JOIN (SELECT category, count(id) AS count FROM contents GROUP BY category) AS A
+        LEFT JOIN (SELECT category, count(id) AS count FROM Contents GROUP BY category) AS A
         ON Categories.name = A.category
         ORDER BY count DESC`,
         [],

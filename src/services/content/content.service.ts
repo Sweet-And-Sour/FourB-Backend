@@ -12,6 +12,29 @@ export class ContentService {
     private userService: UserService
   ) {}
 
+  async isExist(id: number) {
+    try {
+      const [rows] = await this.connectionService.pool.execute(
+        'SELECT * FROM Contents WHERE id=?',
+        [id]
+      );
+
+      console.log(rows);
+
+      if ((rows as any).length === 0) {
+        return false;
+      }
+
+      return true;
+
+    } catch (e) {
+      this.logger.error(e);
+      console.error(e);
+    }
+
+    return false;
+  }
+
   async create(data: ContentData) {
     const users: any = await this.userService.getUser(data.username, "ALL");
 

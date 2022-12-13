@@ -55,7 +55,17 @@ export class CommentService {
   async getAllComments(content_id: number) {
     try {
       const [rows] = await this.connectionService.pool.execute(
-        'SELECT * FROM Comments WHERE content_id=?',
+        `SELECT
+          Comments.id as id,
+          Comments.user_id as user_id,
+          Comments.content_id as content_id,
+          Comments.contents as contents,
+          Users.username as username,
+          Users.avatar as avatar
+        FROM Comments
+        JOIN Users
+        ON Comments.user_id=Users.id
+        WHERE content_id=?`,
         [content_id]
       );
 

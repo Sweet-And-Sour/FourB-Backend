@@ -42,10 +42,10 @@ export class CommentController {
       return {
         message: 'content_id에 해당하는 게시물이 존재하지 않습니다.',
         success: false,
-      }
+      };
     }
 
-    const result = await this.commentService.create({
+    await this.commentService.create({
       user_id: users[0].id,
       content_id: data.content_id,
       contents: data.contents
@@ -54,24 +54,34 @@ export class CommentController {
     return {
       message: '댓글 추가',
       success: true,
-    }
+    };
   }
 
   @ApiOperation({ summary: '게시글 댓글 모두 가져오기' })
-  @Get('/:contend_id')
+  @Get('/:content_id')
   async readComment(@Param('content_id') content_id: number) {
-    const result = this.commentService.getAllComments(content_id);
+    console.log(await this.contentService.isExist(content_id));
+    if (!(await this.contentService.isExist(content_id))) {
+      return {
+        message: '게시글이 존재하지 않습니다.',
+        content_id: content_id,
+        success: false,
+      };
+    }
+
+    const result = await this.commentService.getAllComments(content_id);
 
     return {
       message: '게시글 댓글 모두 가져오기',
       success: true,
+      content_id: content_id,
       comments: result,
-    }
+    };
   }
 
   @ApiOperation({ summary: '댓글 삭제' })
-  // @ApiBearerAuth('access-token')
-  // @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('access-token')
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   async deleteComment(@Param('id') id: number) {
     if (!(await this.commentService.isExist(id))) {

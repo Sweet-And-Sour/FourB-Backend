@@ -10,7 +10,7 @@ export class TeamController {
 
   @ApiOperation({ summary: '팀 정보 요청' })
   @Get('/:username')
-  async getUser(@Param('username') username: string) {
+  async getTeam(@Param('username') username: string) {
     const results = await this.userService.getUser(username, "TEAM") as any;
 
     if (results === undefined) {
@@ -49,7 +49,7 @@ export class TeamController {
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Post()
-  async createUser(@Body() data) {
+  async createTeam(@Body() data) {
     const success = await this.userService.create(data, "TEAM");
 
     return Object.assign({
@@ -78,7 +78,7 @@ export class TeamController {
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Patch()
-  async updateUser(@Body() data) {
+  async updateTeam(@Body() data) {
     const success = await this.userService.update(data, "TEAM");
 
     return {
@@ -99,7 +99,7 @@ export class TeamController {
   @ApiBearerAuth('access-token')
   @UseGuards(JwtAuthGuard)
   @Delete()
-  async deleteUser(@Body() data) {
+  async deleteTeam(@Body() data) {
     const success = await this.userService.delete(data.username, "TEAM");
 
     return Object.assign({

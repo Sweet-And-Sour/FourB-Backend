@@ -42,7 +42,7 @@ export class UserService {
     let params: Array<any> = [username];
 
     if (type !== "ALL") {
-      query += ' and type=?';
+      query += ' AND type=?';
       params.push(type)
     }
 

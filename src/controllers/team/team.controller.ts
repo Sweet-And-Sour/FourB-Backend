@@ -1,12 +1,77 @@
 import { Body, Controller, Delete, Patch, Post, Param, Get, UseGuards } from '@nestjs/common';
 import { ApiBody, ApiParam, ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/services/auth/jwt-auth-guard';
+import { TeamService } from 'src/services/team/team.service';
 import { UserService } from 'src/services/user/user.service';
 
 @ApiTags('Team')
 @Controller('team')
 export class TeamController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private teamService: TeamService
+  ) {}
+
+  @ApiOperation({ summary: '모든 팀 정보 요청' })
+  @Get('/all')
+  async getAllTeams() {
+    const result = await this.teamService.getAllTeams();
+
+    return {
+      message: '모든 팀 정보 요청',
+      success: true,
+      teams: result,
+    }
+  }
+
+  @ApiOperation({ summary: '특정 사용자가 맴버인 모든 팀 정보 요청' })
+  @Get('/user/:username')
+  async getMyTeams(@Param('username') username: string) {
+    const users = await this.userService.getUser(username, "ALL");
+    if (!users) {
+      return {
+        message: '사용자가 존재하지 않습니다',
+        success: false,
+      };
+    }
+
+    const result = await this.teamService.getMyTeams(users[0].id);
+
+    return {
+      message: '특정 사용자가 맴버인 모든 팀 정보 요청',
+      username: username,
+      success: true,
+      teams: result || [],
+    }
+  }
+
+  @ApiOperation({ summary: '팀 가입하기' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: { type: 'string' },
+        teamname: { type: 'string' },
+      },
+    },
+  })
+  @Post('/join')
+  async joinTeam(@Body() data) {
+    const users = await this.userService.getUser(data.username, "ALL");
+    if (!users) {
+      return {
+        message: '사용자가 존재하지 않습니다',
+        success: false,
+      };
+    }
+
+    const result = this.teamService.joinTeam(data.username, data.teamname);
+
+    return {
+      message: '팀 가입하기',
+      success: result,
+    }
+  }
 
   @ApiOperation({ summary: '팀 정보 요청' })
   @Get('/:username')

@@ -6,7 +6,7 @@ import { ContentService } from 'src/services/content/content.service';
 @ApiTags('Content')
 @Controller('content')
 export class ContentController {
-  constructor(private ContentService: ContentService) {}
+  constructor(private contentService: ContentService) {}
 
   @ApiOperation({ summary: '컨텐츠 생성 (인증 필요)' })
   @ApiBody({
@@ -26,7 +26,7 @@ export class ContentController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createContent(@Body() data) {
-    const result = await this.ContentService.create(data);
+    const result = await this.contentService.create(data);
 
     if (result === undefined) {
       return {
@@ -75,7 +75,7 @@ export class ContentController {
       query.filter = JSON.parse(query.filter);
     }
 
-    const result = await this.ContentService.getAll(query.page, query.orderBy, query.filter);
+    const result = await this.contentService.getAll(query.page, query.orderBy, query.filter);
 
     return {
       message: '전체 게시글 불러오기',
@@ -93,7 +93,7 @@ export class ContentController {
   })
   @Get(':id')
   async readContent(@Param() params) {
-    const result = await this.ContentService.read(params.id);
+    const result = await this.contentService.read(params.id);
 
     if (result === undefined) {
       return {
@@ -123,7 +123,7 @@ export class ContentController {
   @UseGuards(JwtAuthGuard)
   @Patch()
   async updateContent(@Body() data) {
-    const success = await this.ContentService.update(data);
+    const success = await this.contentService.update(data);
 
     return Object.assign({
       message: '게시글 수정',
@@ -144,7 +144,7 @@ export class ContentController {
   @UseGuards(JwtAuthGuard)
   @Delete()
   async deleteContent(@Body() data) {
-    const success = await this.ContentService.delete(data);
+    const success = await this.contentService.delete(data);
 
     return Object.assign({
       message: '게시글 삭제',

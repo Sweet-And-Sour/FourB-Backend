@@ -48,23 +48,41 @@ export class ContentController {
   @ApiOperation({ summary: '모든 컨텐츠 요청' })
   @ApiQuery({
     name: 'page',
-    required: true,
+    required: false,
     description: '페이지 번호'
   })
   @ApiQuery({
     name: 'orderBy',
-    required: true,
+    required: false,
     description: '정렬 방식'
+  })
+  @ApiQuery({
+    name: 'filter',
+    required: false,
+    description: '필터'
   })
   @Get('/all')
   async allContent(@Query() query) {
-    const result = await this.ContentService.getAll(query.page, query.orderBy);
+    if (query.page === undefined) {
+      query.page = 0;
+    }
+    if (query.orderBy === undefined) {
+      query.orderBy = 'created_datetime desc';
+    }
+    if (query.filter === undefined) {
+      query.filter = {};
+    } else {
+      query.filter = JSON.parse(query.filter);
+    }
+
+    const result = await this.ContentService.getAll(query.page, query.orderBy, query.filter);
 
     return {
       message: '전체 게시글 불러오기',
       success: true,
       page: query.page,
       orderBy: query.orderBy,
+      filter: query.filter,
       contents: result,
     };
   }

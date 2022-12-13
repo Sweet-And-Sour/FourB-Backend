@@ -82,12 +82,27 @@ export class ContentService {
     return true;
   }
 
-  async getAll(page: number, orderBy: string) {
+  async getAll(page: number, orderBy: string, filter: any | undefined) {
+    let query = 'SELECT * FROM Contents\n';
+
+    const filterKeys = Object.keys(filter || {});
+    if (filterKeys.length > 0) {
+      query += `WHERE `;
+
+      for (const key of filterKeys) {
+        query += `${key}='${filter[key]}' AND`;
+      }
+
+      query = query.substring(0, query.length - 4);
+      query += '\n';
+    }
+
+    query += `ORDER BY ${orderBy}` + '\n';
+    query += `LIMIT ${page * 10}, 10`;
+
     try {
       const [rows] = await this.connectionService.pool.execute(
-        `SELECT * FROM Contents
-        ORDER BY '${orderBy}' DESC
-        LIMIT ${page * 10}, 10`,
+        query,
         []
       );
 
